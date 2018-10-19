@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="Builder"
+         name="mwe2workflowbuilder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            callOnEmptyDelta="false"
+            hasNature="false"
+            isConfigurable="true"
+            supportsConfigurations="true">
+         <run
+               class="tools.mdsd.ecoreworkflow.builder.MWE2WorkflowBuilder">
+            <parameter
+                  name="tools.mdsd.ecoreworkflow.builder.workflowdefinition"
+                  value="model/workflow.mwe2">
+            </parameter>
+         </run>
+      </builder>
+   </extension>
+
+</plugin>

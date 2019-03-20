@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/tools.mdsd.ecoreworkflow.builder.feature_0.1.0.qualifier.jar" id="tools.mdsd.ecoreworkflow.builder.feature" version="0.1.0.qualifier">
+      <category name="ecoreworkflow"/>
+   </feature>
+   <feature url="features/tools.mdsd.ecoreworkflow.mwe2lib.feature_0.1.0.qualifier.jar" id="tools.mdsd.ecoreworkflow.mwe2lib.feature" version="0.1.0.qualifier">
+      <category name="ecoreworkflow"/>
+   </feature>
+   <category-def name="ecoreworkflow" label="MDSD Tools Ecore Workflow"/>
+</site>

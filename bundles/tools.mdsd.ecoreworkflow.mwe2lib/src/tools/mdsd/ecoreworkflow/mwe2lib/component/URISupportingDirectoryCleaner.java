@@ -27,7 +27,6 @@ public class URISupportingDirectoryCleaner extends DirectoryCleaner {
 	
 	@Override
 	protected void invokeInternal(WorkflowContext model, ProgressMonitor monitor, Issues issues) {
-		//if (uriConverter == null) throw new IllegalStateException("Something went wrong with dependency injection");
 		this.setDirectory(uris.stream().map(this::convertUri).collect(Collectors.joining(",")));
 		
 		super.invokeInternal(model, monitor, issues);

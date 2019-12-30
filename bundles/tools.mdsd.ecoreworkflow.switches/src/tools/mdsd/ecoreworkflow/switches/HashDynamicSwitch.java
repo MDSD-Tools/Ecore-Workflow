@@ -36,13 +36,8 @@ public class HashDynamicSwitch<T> implements DynamicSwitch<T> {
 	private Map<EClass, Function<EObject, T>> caseDefinitions = new LinkedHashMap<>();
 	private ConcurrentMap<EClass, Function<EObject, T>[]> cachedInvokationSequences = new ConcurrentHashMap<>();
 	private Function<EObject, T> defaultCase;
-	private static EClass eObjectClass;	
+	private static final EClass E_OBJECT_CLASS = EcorePackage.Literals.EOBJECT;	
 	
-	public HashDynamicSwitch() {
-		if (eObjectClass == null) {
-			eObjectClass = EcorePackage.eINSTANCE.getEObject();
-		}
-	}
 	
 	@Override
 	public DynamicSwitch<T> dynamicCase(EClass clazz, Function<EObject, T> then) {
@@ -95,8 +90,8 @@ public class HashDynamicSwitch<T> implements DynamicSwitch<T> {
 		);
 		
 		// EObject::isSuperTypeOf never returns 'EObject', but the user might have supplied it as a type
-		if (caseDefinitions.containsKey(eObjectClass)) {
-			invocations.add(caseDefinitions.get(eObjectClass));
+		if (caseDefinitions.containsKey(E_OBJECT_CLASS)) {
+			invocations.add(caseDefinitions.get(E_OBJECT_CLASS));
 		}
 		
 		return invocations.toArray(new Function[0]);

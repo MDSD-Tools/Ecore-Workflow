@@ -48,6 +48,8 @@ class MSwitchClassGenerator implements PackageLevelCodeFileGenerator {
 		
 		import tools.mdsd.ecoreworkflow.switches.MSwitch;
 		
+		// auto-generated class, do not edit
+		
 		public class «className»<T> extends MSwitch<T> {
 			private static «genPackage.importedPackageInterfaceName» modelPackage;
 			«FOR c:genPackage.genClasses»

@@ -47,7 +47,12 @@ public class HashDynamicSwitch<T>
     if (!cachedInvokationSequences.isEmpty()) { // adding cases might cause synchronization issues
       throw new IllegalStateException("The switch was modified after already being used");
     }
-    caseDefinitions.put(clazz, then);
+    if (E_OBJECT_CLASS.equals(clazz)) {
+      // special treatment necessary, because EObject might not be caught otherwise.
+      defaultCase(then);
+    } else {
+      caseDefinitions.put(clazz, then);
+    }
     return this;
   }
 
@@ -93,11 +98,6 @@ public class HashDynamicSwitch<T>
         invocations.add(caseDefinitions.get(c));
       }
     }, EClass::getESuperTypes);
-
-    // EObject::isSuperTypeOf never returns 'EObject', but the user might have supplied it as a type
-    if (caseDefinitions.containsKey(E_OBJECT_CLASS)) {
-      invocations.add(caseDefinitions.get(E_OBJECT_CLASS));
-    }
 
     return invocations.toArray(new Function[0]);
   }

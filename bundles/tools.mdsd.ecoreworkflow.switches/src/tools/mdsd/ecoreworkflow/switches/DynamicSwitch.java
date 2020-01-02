@@ -9,9 +9,12 @@ import org.eclipse.emf.ecore.EObject;
  *
  * @param <T> the return type of the switch's clauses
  */
-public interface DynamicSwitch<T> {
+/* inheriting from ApplyableSwitch, InspectableSwitch is against single-concern principles,
+   but is necessary for the builder pattern */
+public interface DynamicSwitch<T> extends ApplyableSwitch<T>, InspectableSwitch<T> {
   /**
    * add a dynamically specified case clause to the switch.
+   * 
    * @param clazz the class for which to define the case
    * @param then the functional body of the case clause
    * @return {@code this}
@@ -27,8 +30,9 @@ public interface DynamicSwitch<T> {
   DynamicSwitch<T> defaultCase(Function<EObject, T> then);
 
   /**
-   * merge another switch into this switch.
-   * equivalent to defining all of the other switches cases and default case on this switch
+   * merge another switch into this switch. equivalent to defining all of the other switches cases
+   * and default case on this switch
+   * 
    * @param other the other switch
    * @return {@code this}
    */
@@ -43,5 +47,5 @@ public interface DynamicSwitch<T> {
     return this;
   }
 
-  
+
 }

@@ -6,7 +6,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 
-public abstract class MSwitch<T> {
+public abstract class MSwitch<T> implements ApplyableSwitch<T>, InspectableSwitch<T> {
   protected Function<EObject, T> defaultCase;
 
   public static class SwitchingException extends RuntimeException {
@@ -25,7 +25,7 @@ public abstract class MSwitch<T> {
   public T doSwitch(EObject s) {
     return doSwitch(s.eClass(), s);
   }
-
+  
   protected T doSwitch(EClass eClass, EObject eObject) {
     if (isSwitchFor(eClass.getEPackage())) {
       return doSwitch(eClass.getClassifierID(), eObject);
@@ -37,7 +37,12 @@ public abstract class MSwitch<T> {
   }
   
   protected abstract T doSwitch(int classifierID, EObject eObject) throws SwitchingException;
-
+  
+  @Override
+  public Function<EObject, T> getDefaultCase() {
+    return defaultCase;
+  }
+  
   protected T applyDefaultCase(EObject eObject) {
     if (defaultCase != null) {
       return defaultCase.apply(eObject); // the default case will not fall through
@@ -47,4 +52,5 @@ public abstract class MSwitch<T> {
   }
 
   public abstract boolean isSwitchFor(EPackage ePackage);
+
 }

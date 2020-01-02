@@ -42,7 +42,10 @@ class MSwitchClassGenerator implements PackageLevelCodeFileGenerator {
 		package «packageName»;
 		
 		import java.util.function.Function;
+		import java.util.HashMap;
+		import java.util.Map;
 		
+		import org.eclipse.emf.ecore.EClass;
 		import org.eclipse.emf.ecore.EPackage;
 		import org.eclipse.emf.ecore.EObject;
 		
@@ -51,19 +54,13 @@ class MSwitchClassGenerator implements PackageLevelCodeFileGenerator {
 		// auto-generated class, do not edit
 		
 		public class «className»<T> extends MSwitch<T> {
-			private static «genPackage.importedPackageInterfaceName» modelPackage;
+			private static «genPackage.importedPackageInterfaceName» MODEL_PACKAGE = «genPackage.importedPackageInterfaceName».eINSTANCE;
 			«FOR c:genPackage.genClasses»
 			private Function<«c.importedInterfaceName»,T> «getCaseName(c)»;
 			«ENDFOR»
-			
-			public «className»() {
-				if (modelPackage == null) {
-					modelPackage = «genPackage.importedPackageInterfaceName».eINSTANCE;
-				}
-			}
-			
+		
 			public boolean isSwitchFor(EPackage ePackage) {
-				return ePackage == modelPackage;
+				return ePackage == MODEL_PACKAGE;
 			}
 			
 			protected T doSwitch(int classifierID, EObject eObject) throws MSwitch.SwitchingException {
@@ -111,6 +108,19 @@ class MSwitchClassGenerator implements PackageLevelCodeFileGenerator {
 			public «className»<T> orElse(Function<EObject, T> defaultCase) {
 				this.defaultCase = defaultCase;
 				return this;
+			}
+			
+			@Override
+			public Map<EClass, Function<EObject, T>> getCases() {
+			  Map<EClass, Function<EObject, T>> definedCases = new HashMap<>();
+			  
+			  «FOR c:genPackage.genClasses»
+			  if (this.«getCaseName(c)» != null) {
+			  	definedCases.put(«genPackage.importedPackageInterfaceName».Literals.«genPackage.getClassifierID(c)», this.«getCaseName(c)».compose(o -> («c.importedInterfaceName») o));
+			  }
+			  «ENDFOR»
+			  
+			  return definedCases;
 			}
 		}
 		'''

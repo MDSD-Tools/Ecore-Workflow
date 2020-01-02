@@ -6,7 +6,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 
 /** 
- * a switch that can list the cases upon which it is defined
+ * a switch that can list the cases upon which it is defined.
  * @param <T> the return type of the switch's clauses
  */
 public interface InspectableSwitch<T> {

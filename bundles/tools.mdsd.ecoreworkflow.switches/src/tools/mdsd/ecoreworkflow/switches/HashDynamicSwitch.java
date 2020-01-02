@@ -31,7 +31,7 @@ import org.eclipse.emf.ecore.EcorePackage;
  *
  * @param <T>
  */
-public class HashDynamicSwitch<T> implements DynamicSwitch<T> {
+public class HashDynamicSwitch<T> implements DynamicSwitch<T>, ApplyableSwitch<T>, InspectableSwitch<T> {
 	
 	private Map<EClass, Function<EObject, T>> caseDefinitions = new LinkedHashMap<>();
 	private ConcurrentMap<EClass, Function<EObject, T>[]> cachedInvokationSequences = new ConcurrentHashMap<>();

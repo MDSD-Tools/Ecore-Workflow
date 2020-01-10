@@ -93,6 +93,7 @@ class MSwitchClassGenerator implements PackageLevelCodeFileGenerator {
 				«FOR field: genPackage.genClasses.map[caseName]»
 				if (other.«field» != null) this.«field» = other.«field»;
 				«ENDFOR»
+				if (other.defaultCase != null) this.defaultCase = other.defaultCase;
 				return this;
 			} 
 			

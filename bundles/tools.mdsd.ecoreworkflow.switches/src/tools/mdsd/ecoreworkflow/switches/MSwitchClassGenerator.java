@@ -258,6 +258,8 @@ public class MSwitchClassGenerator implements PackageLevelCodeFileGenerator {
       }
     }
     _builder.append("\t\t");
+    _builder.append("if (other.defaultCase != null) this.defaultCase = other.defaultCase;");
+    _builder.append("\t\t");
     _builder.append("return this;");
     _builder.newLine();
     _builder.append("\t");

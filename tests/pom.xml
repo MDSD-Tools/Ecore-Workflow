@@ -12,6 +12,7 @@
 	
 	<modules>
 		<module>tools.mdsd.ecoreworkflow.switches.tests</module>
+		<module>tools.mdsd.ecoreworkflow.switches.testmodel</module>
 	</modules>
 	
 </project>

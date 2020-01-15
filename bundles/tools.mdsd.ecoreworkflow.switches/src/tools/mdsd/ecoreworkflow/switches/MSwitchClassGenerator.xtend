@@ -1,6 +1,6 @@
 package tools.mdsd.ecoreworkflow.switches;
 // TODO uncomment the following. It is only commented out, because xtend classes don't make it into the maven build up to now
-/*
+
 import java.io.OutputStream
 import java.io.PrintWriter
 import java.nio.file.Paths
@@ -40,7 +40,7 @@ class MSwitchClassGenerator implements PackageLevelCodeFileGenerator {
 	
 	private def String makeContent() {
 		'''
-		package «packageName»;
+		package Â«packageNameÂ»;
 		
 		import java.util.function.Function;
 		import java.util.HashMap;
@@ -54,11 +54,11 @@ class MSwitchClassGenerator implements PackageLevelCodeFileGenerator {
 		
 		// auto-generated class, do not edit
 		
-		public class «className»<T> extends MSwitch<T> {
-			private static «genPackage.importedPackageInterfaceName» MODEL_PACKAGE = «genPackage.importedPackageInterfaceName».eINSTANCE;
-			«FOR c:genPackage.genClasses»
-			private Function<«c.importedInterfaceName»,T> «getCaseName(c)»;
-			«ENDFOR»
+		public class Â«classNameÂ»<T> extends MSwitch<T> {
+			private static Â«genPackage.importedPackageInterfaceNameÂ» MODEL_PACKAGE = Â«genPackage.importedPackageInterfaceNameÂ».eINSTANCE;
+			Â«FOR c:genPackage.genClassesÂ»
+			private Function<Â«c.importedInterfaceNameÂ»,T> Â«getCaseName(c)Â»;
+			Â«ENDFORÂ»
 		
 			public boolean isSwitchFor(EPackage ePackage) {
 				return ePackage == MODEL_PACKAGE;
@@ -67,47 +67,47 @@ class MSwitchClassGenerator implements PackageLevelCodeFileGenerator {
 			protected T doSwitch(int classifierID, EObject eObject) throws MSwitch.SwitchingException {
 				T result;
 				switch(classifierID) {
-					«FOR c : genPackage.genClasses»
-					case «genPackage.importedPackageInterfaceName».«genPackage.getClassifierID(c)»: {
-						«c.importedInterfaceName» casted = («c.importedInterfaceName») eObject;
-						if («getCaseName(c)» != null) {
-							result = «getCaseName(c)».apply(casted);
+					Â«FOR c : genPackage.genClassesÂ»
+					case Â«genPackage.importedPackageInterfaceNameÂ».Â«genPackage.getClassifierID(c)Â»: {
+						Â«c.importedInterfaceNameÂ» casted = (Â«c.importedInterfaceNameÂ») eObject;
+						if (Â«getCaseName(c)Â» != null) {
+							result = Â«getCaseName(c)Â».apply(casted);
 							if (result != null) return result;
 						}
-						«FOR alternative:c.switchGenClasses»
-						if («getCaseName(alternative)» != null) {
-							result = «getCaseName(alternative)».apply(casted);
+						Â«FOR alternative:c.switchGenClassesÂ»
+						if (Â«getCaseName(alternative)Â» != null) {
+							result = Â«getCaseName(alternative)Â».apply(casted);
 							if (result != null) return result;
 						}
-						«ENDFOR»
+						Â«ENDFORÂ»
 						break;
 					}
-					«ENDFOR»
+					Â«ENDFORÂ»
 					default:
 						throw new Error("type " + eObject.eClass() + " was not considered by the mswitch code generator");
 				}
 				return applyDefaultCase(eObject);
 			}
 			
-			public «className»<T> merge(«className»<T> other) {
-				«FOR field: genPackage.genClasses.map[caseName]»
-				if (other.«field» != null) this.«field» = other.«field»;
-				«ENDFOR»
+			public Â«classNameÂ»<T> merge(Â«classNameÂ»<T> other) {
+				Â«FOR field: genPackage.genClasses.map[caseName]Â»
+				if (other.Â«fieldÂ» != null) this.Â«fieldÂ» = other.Â«fieldÂ»;
+				Â«ENDFORÂ»
 				if (other.defaultCase != null) this.defaultCase = other.defaultCase;
 				return this;
 			} 
 			
-			«FOR c : genPackage.genClasses»
-			public interface «getInterfaceName(c)»<T> extends Function<«c.importedInterfaceName»,T> {}
-			«ENDFOR»
+			Â«FOR c : genPackage.genClassesÂ»
+			public interface Â«getInterfaceName(c)Â»<T> extends Function<Â«c.importedInterfaceNameÂ»,T> {}
+			Â«ENDFORÂ»
 			
-			«FOR c : genPackage.genClasses»
-			public «className»<T> when(«getInterfaceName(c)»<T> then) {
-				this.«getCaseName(c)» = then;
+			Â«FOR c : genPackage.genClassesÂ»
+			public Â«classNameÂ»<T> when(Â«getInterfaceName(c)Â»<T> then) {
+				this.Â«getCaseName(c)Â» = then;
 				return this;
 			}
-			«ENDFOR»
-			public «className»<T> orElse(Function<EObject, T> defaultCase) {
+			Â«ENDFORÂ»
+			public Â«classNameÂ»<T> orElse(Function<EObject, T> defaultCase) {
 				this.defaultCase = defaultCase;
 				return this;
 			}
@@ -116,11 +116,11 @@ class MSwitchClassGenerator implements PackageLevelCodeFileGenerator {
 			public Map<EClass, Function<EObject, T>> getCases() {
 			  Map<EClass, Function<EObject, T>> definedCases = new HashMap<>();
 			  
-			  «FOR c:genPackage.genClasses»
-			  if (this.«getCaseName(c)» != null) {
-			  	definedCases.put(«genPackage.importedPackageInterfaceName».Literals.«genPackage.getClassifierID(c)», this.«getCaseName(c)».compose(o -> («c.importedInterfaceName») o));
+			  Â«FOR c:genPackage.genClassesÂ»
+			  if (this.Â«getCaseName(c)Â» != null) {
+			  	definedCases.put(Â«genPackage.importedPackageInterfaceNameÂ».Literals.Â«genPackage.getClassifierID(c)Â», this.Â«getCaseName(c)Â».compose(o -> (Â«c.importedInterfaceNameÂ») o));
 			  }
-			  «ENDFOR»
+			  Â«ENDFORÂ»
 			  
 			  return definedCases;
 			}
@@ -136,4 +136,4 @@ class MSwitchClassGenerator implements PackageLevelCodeFileGenerator {
 		"When" + genPackage.getClassUniqueName(c)
 	}
 	
-}*/
+}

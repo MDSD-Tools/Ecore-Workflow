@@ -51,10 +51,11 @@ class MSwitchClassGenerator implements PackageLevelCodeFileGenerator {
 		import org.eclipse.emf.ecore.EObject;
 		
 		import tools.mdsd.ecoreworkflow.switches.MSwitch;
+		import tools.mdsd.ecoreworkflow.switches.MergeableSwitch;
 		
 		// auto-generated class, do not edit
 		
-		public class «className»<T> extends MSwitch<T> {
+		public class «className»<T> extends MSwitch<T> implements MergeableSwitch<TestscenarioMSwitch<T>, TestscenarioMSwitch<T>> {
 			private static «genPackage.importedPackageInterfaceName» MODEL_PACKAGE = «genPackage.importedPackageInterfaceName».eINSTANCE;
 			«FOR c:genPackage.genClasses»
 			private Function<«c.importedInterfaceName»,T> «getCaseName(c)»;

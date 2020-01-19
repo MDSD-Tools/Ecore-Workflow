@@ -11,7 +11,8 @@ import org.eclipse.emf.ecore.EObject;
  */
 /* inheriting from ApplyableSwitch, InspectableSwitch is against single-concern principles,
    but is necessary for the builder pattern */
-public interface DynamicSwitch<T> extends ApplyableSwitch<T>, InspectableSwitch<T> {
+public interface DynamicSwitch<T> extends ApplyableSwitch<T>, InspectableSwitch<T>,
+    MergeableSwitch<InspectableSwitch<? extends T>, DynamicSwitch<T>> {
   /**
    * add a dynamically specified case clause to the switch.
    * 

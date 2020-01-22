@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <!-- parent is maven default parent, not tycho -->
+   
+   <groupId>tools.mdsd.ecoreworkflow</groupId>
+   <artifactId>tools.mdsd.ecoreworkflow.switches.tests.perf</artifactId>
+   <version>1.0</version>
+   <packaging>jar</packaging>
+   <name>JMH benchmark for Ecore Switches, including our custom MSwitch and DynamicSwitch</name>
+
+   <dependencies>
+      <dependency>
+         <groupId>org.openjdk.jmh</groupId>
+         <artifactId>jmh-core</artifactId>
+         <version>${jmh.version}</version>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.openjdk.jmh</groupId>
+         <artifactId>jmh-generator-annprocess</artifactId>
+         <version>${jmh.version}</version>
+         <scope>provided</scope>
+      </dependency>
+      
+      <dependency>
+      	<groupId>tools.mdsd.ecoreworkflow</groupId>
+      	<artifactId>tools.mdsd.ecoreworkflow.switches.testmodel</artifactId>
+      	<version>0.1.0-SNAPSHOT</version>
+      </dependency>
+      
+       <dependency>
+      	<groupId>tools.mdsd.ecoreworkflow</groupId>
+      	<artifactId>tools.mdsd.ecoreworkflow.switches</artifactId>
+      	<version>0.1.0-SNAPSHOT</version>
+      </dependency>
+      
+      <dependency>
+      	<groupId>org.eclipse.emf</groupId>
+      	<artifactId>org.eclipse.emf.ecore</artifactId>
+      	<version>2.20.0</version>
+      </dependency>
+      
+      <dependency>
+      	<groupId>org.eclipse.emf</groupId>
+      	<artifactId>org.eclipse.emf.common</artifactId>
+      	<version>2.17.0</version>
+      </dependency>
+   </dependencies>
+
+   <properties>
+      <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+      <jmh.version>1.22</jmh.version>
+      <javac.target>1.8</javac.target>
+      <uberjar.name>benchmarks</uberjar.name>
+      <jmh.format>json</jmh.format>
+   </properties>
+	
+	<profiles>
+		<profile>
+			<!-- when this profile is enabled, benchmarks are run (as part of the verify phase) -->
+			<id>benchmarking</id>
+			<activation>
+				<property>
+					<name>benchmarking</name>
+					<value>true</value>
+				</property>
+			</activation>
+			
+			<build>
+				<plugins>
+					<plugin>
+			      	 	<groupId>org.codehaus.mojo</groupId>
+			      	 	<artifactId>exec-maven-plugin</artifactId>
+			      	 	<version>1.6.0</version>
+			      	 	<executions>
+			      	 		<execution>
+			      	 			<phase>verify</phase>
+			      	 			<goals>
+			      	 				<goal>exec</goal>
+			      	 			</goals>
+			      	 		</execution>
+			      	 	</executions>
+			      	 	<configuration>
+			      	 		<executable>java</executable>
+			      	 		<arguments>
+			      	 			<argument>-jar</argument>
+			      	 			<argument>target/${uberjar.name}.jar</argument><!-- this jar contains the benchmarks -->
+			      	 			
+			      	 			<argument>-foe</argument><!-- fail on error -->
+			      	 			<argument>true</argument>
+			      	 			
+			      	 			<argument>-r</argument><!-- time per iteration -->
+			      	 			<argument>1 s</argument>
+			      	 			
+			      	 			<argument>-w</argument><!-- warmup time -->
+			      	 			<argument>1 s</argument>
+			      	 			
+			      	 			<argument>-rf</argument><!-- reporting format -->
+			      	 			<argument>${jmh.format}</argument>
+			      	 			
+			      	 			<argument>-rff</argument><!-- results file -->
+			      	 			<argument>target/jmh-result.${jmh.format}</argument>
+			      	 			
+			      	 			<argument>-f</argument><!-- number of forks -->
+			      	 			<argument>5</argument>
+			      	 			
+			      	 			<argument>-i</argument>
+			      	 			<argument>5</argument><!-- number of measurement iterations -->
+			      	 		</arguments>
+			      	 		
+			      	 	</configuration>
+			      	 </plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	
+   <build>
+      <plugins>
+         <plugin>
+         	<!-- benchmark is also compiled when it will not be run, to ensure that they work with the code... -->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.8.0</version>
+            <configuration>
+               <compilerVersion>${javac.target}</compilerVersion>
+               <source>${javac.target}</source>
+               <target>${javac.target}</target>
+            </configuration>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.2.1</version>
+            <executions>
+               <execution>
+                  <phase>package</phase>
+                  <goals>
+                     <goal>shade</goal>
+                  </goals>
+                  <configuration>
+                     <finalName>${uberjar.name}</finalName>
+                     <transformers>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                           <mainClass>org.openjdk.jmh.Main</mainClass>
+                        </transformer>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+                     </transformers>
+                     <filters>
+                        <filter>
+                           <!--
+                                        Shading signed JARs will fail without this.
+                                        http://stackoverflow.com/questions/999489/invalid-signature-file-when-attempting-to-run-a-jar
+                                    -->
+                           <artifact>*:*</artifact>
+                           <excludes>
+                              <exclude>META-INF/*.SF</exclude>
+                              <exclude>META-INF/*.DSA</exclude>
+                              <exclude>META-INF/*.RSA</exclude>
+                           </excludes>
+                        </filter>
+                     </filters>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+      <pluginManagement>
+         <plugins>
+            <plugin>
+               <artifactId>maven-clean-plugin</artifactId>
+               <version>2.5</version>
+            </plugin>
+            <plugin>
+               <artifactId>maven-deploy-plugin</artifactId>
+               <version>2.8.1</version>
+            </plugin>
+            <plugin>
+               <artifactId>maven-install-plugin</artifactId>
+               <version>2.5.1</version>
+            </plugin>
+            <plugin>
+               <artifactId>maven-jar-plugin</artifactId>
+               <version>2.4</version>
+            </plugin>
+            <plugin>
+               <artifactId>maven-javadoc-plugin</artifactId>
+               <version>2.9.1</version>
+            </plugin>
+            <plugin>
+               <artifactId>maven-resources-plugin</artifactId>
+               <version>2.6</version>
+            </plugin>
+            <plugin>
+               <artifactId>maven-site-plugin</artifactId>
+               <version>3.3</version>
+            </plugin>
+            <plugin>
+               <artifactId>maven-source-plugin</artifactId>
+               <version>2.2.1</version>
+            </plugin>
+            <plugin>
+               <artifactId>maven-surefire-plugin</artifactId>
+               <version>2.17</version>
+            </plugin>
+         </plugins>
+      </pluginManagement>
+   </build>
+</project>

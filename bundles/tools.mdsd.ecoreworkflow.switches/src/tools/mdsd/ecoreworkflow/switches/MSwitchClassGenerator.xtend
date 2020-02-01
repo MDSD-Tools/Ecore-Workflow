@@ -55,7 +55,7 @@ class MSwitchClassGenerator implements PackageLevelCodeFileGenerator {
 		
 		// auto-generated class, do not edit
 		
-		public class «className»<T> extends MSwitch<T> implements MergeableSwitch<TestscenarioMSwitch<T>, TestscenarioMSwitch<T>> {
+		public class «className»<T> extends MSwitch<T> implements MergeableSwitch<«className»<T>, «className»<T>> {
 			private static «genPackage.importedPackageInterfaceName» MODEL_PACKAGE = «genPackage.importedPackageInterfaceName».eINSTANCE;
 			«FOR c:genPackage.genClasses»
 			private Function<«c.importedInterfaceName»,T> «getCaseName(c)»;

@@ -7,7 +7,7 @@ import java.lang.reflect.Proxy;
 import java.util.function.Function;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import testscenario.xutil.TestscenarioMSwitch;
+import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.xutil.TestscenarioMSwitch;
 
 public class TestscenarioMSwitchBuilder<T> implements SwitchBuilder<T, TestscenarioMSwitch<T>> {
 
@@ -18,7 +18,7 @@ public class TestscenarioMSwitchBuilder<T> implements SwitchBuilder<T, Testscena
     Class<?> functionalInterfaceClass; // the WhenX interface that is used to identify the overloaded when method
     
     try {
-      functionalInterfaceClass = Class.forName("testscenario.xutil.TestscenarioMSwitch$When" + clazz.getName());
+      functionalInterfaceClass = Class.forName("tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.xutil.TestscenarioMSwitch$When" + clazz.getName());
     } catch (ClassNotFoundException e) {
       throw new RuntimeException("The corresponding When...-interface could not be found in the mswitch class", e);
     }

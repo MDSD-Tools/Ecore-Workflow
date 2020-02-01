@@ -1,7 +1,7 @@
 package tools.mdsd.ecoreworkflow;
 
 import org.eclipse.emf.ecore.EObject;
-import testscenario.xutil.TestscenarioMSwitch;
+import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.xutil.TestscenarioMSwitch;
 import tools.mdsd.ecoreworkflow.switches.DynamicSwitch;
 import tools.mdsd.ecoreworkflow.switches.HashDynamicSwitch;
 import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.*;

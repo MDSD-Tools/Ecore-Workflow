@@ -8,10 +8,10 @@ Bundle-ClassPath: .
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
-Export-Package: testscenario.xutil,
- tools.mdsd.ecoreworkflow.switches.testmodel.testscenario,
+Export-Package: tools.mdsd.ecoreworkflow.switches.testmodel.testscenario,
  tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.impl,
- tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.util
+ tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.util,
+ tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.xutil
 Bundle-ActivationPolicy: lazy
 Require-Bundle: org.eclipse.emf.ecore;bundle-version="2.18.0";visibility:=reexport,
  org.eclipse.emf.mwe2.launch;bundle-version="2.10.0",

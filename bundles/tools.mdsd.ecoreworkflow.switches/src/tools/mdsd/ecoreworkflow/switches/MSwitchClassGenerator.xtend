@@ -35,7 +35,13 @@ class MSwitchClassGenerator implements PackageLevelCodeFileGenerator {
 	}
 	
 	private def String getPackageName() {
-		genPackage.packageName + ".xutil"
+		val basePrefix = 
+			if (genPackage.basePackage !== null && genPackage.basePackage.length > 0) {
+				genPackage.basePackage + "."
+			} else {
+				""
+			}
+		basePrefix + genPackage.packageName + ".xutil"
 	}
 	
 	private def String makeContent() {

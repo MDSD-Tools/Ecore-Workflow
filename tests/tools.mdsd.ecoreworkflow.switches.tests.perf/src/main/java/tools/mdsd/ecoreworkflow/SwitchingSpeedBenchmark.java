@@ -1,7 +1,7 @@
 package tools.mdsd.ecoreworkflow;
 
 import org.openjdk.jmh.runner.options.OptionsBuilder;
-import testscenario.xutil.TestscenarioMSwitch;
+import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.xutil.TestscenarioMSwitch;
 import org.eclipse.emf.ecore.EObject;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Scope;

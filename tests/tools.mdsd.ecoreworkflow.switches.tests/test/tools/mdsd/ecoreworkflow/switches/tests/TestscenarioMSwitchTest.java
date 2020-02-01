@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.TestscenarioPackage.Literals.E;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import testscenario.xutil.TestscenarioMSwitch;
+import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.xutil.TestscenarioMSwitch;
 import tools.mdsd.ecoreworkflow.switches.ApplyableSwitch;
 import tools.mdsd.ecoreworkflow.switches.InspectableSwitch;
 import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.F;

@@ -1,8 +1,7 @@
 package tools.mdsd.ecoreworkflow.switches;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -10,7 +9,6 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EcorePackage;
 import tools.mdsd.ecoreworkflow.switches.MSwitch.SwitchingException;
 
 /**
@@ -32,36 +30,12 @@ import tools.mdsd.ecoreworkflow.switches.MSwitch.SwitchingException;
  *
  * @param <T> the return type of the switch's clauses
  */
-public class HashDynamicSwitch<T>
+public class HashDynamicSwitch<T> extends AbstractInspectableDynamicSwitch<T>
     implements DynamicSwitch<T>, ApplyableSwitch<T>, InspectableSwitch<T> {
 
-  private Map<EClass, Function<EObject, T>> caseDefinitions = new LinkedHashMap<>();
-  private ConcurrentMap<EClass, Function<EObject, T>[]> cachedInvokationSequences =
-      new ConcurrentHashMap<>();
-  private Function<EObject, T> defaultCase;
-  private static final EClass E_OBJECT_CLASS = EcorePackage.Literals.EOBJECT;
-
-
-  @Override
-  public DynamicSwitch<T> dynamicCase(EClass clazz, Function<EObject, T> then) {
-    if (!cachedInvokationSequences.isEmpty()) { // adding cases might cause synchronization issues
-      throw new IllegalStateException("The switch was modified after already being used");
-    }
-    if (E_OBJECT_CLASS.equals(clazz)) {
-      // special treatment necessary, because EObject might not be caught otherwise.
-      defaultCase(then);
-    } else {
-      caseDefinitions.put(clazz, then);
-    }
-    return this;
-  }
-
-  @Override
-  public DynamicSwitch<T> defaultCase(Function<EObject, T> then) {
-    this.defaultCase = then;
-    return this;
-  }
-
+  private Map<EClass, Function<EObject, T>[]> cachedInvokationSequences =
+      new HashMap<>();
+  
   @Override
   public T doSwitch(EObject object) {
     EClass eClass = object.eClass();
@@ -83,6 +57,11 @@ public class HashDynamicSwitch<T>
 
     throw new SwitchingException("no default case defined");
   }
+  
+  @Override
+  protected boolean canDafineCases() {
+    return cachedInvokationSequences.isEmpty(); // adding cases to a used switch might cause synchronization issues
+  }
 
   @SuppressWarnings("unchecked") /*
                                   * not problematic as the function we return comes from our
@@ -100,16 +79,6 @@ public class HashDynamicSwitch<T>
     }, EClass::getESuperTypes);
 
     return invocations.toArray(new Function[0]);
-  }
-
-  @Override
-  public Map<EClass, Function<EObject, T>> getCases() {
-    return Collections.unmodifiableMap(caseDefinitions);
-  }
-
-  @Override
-  public Function<EObject, T> getDefaultCase() {
-    return defaultCase;
   }
 
 }

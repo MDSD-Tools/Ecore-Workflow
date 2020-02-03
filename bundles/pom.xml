@@ -16,4 +16,12 @@
 		<module>tools.mdsd.ecoreworkflow.switches</module>
 	</modules>
 	
+	<repositories>
+		<repository>
+			<id>orbit</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/tools/orbit/downloads/drops/R20190827152740/repository/</url>
+		</repository>
+	</repositories>
+	
 </project>

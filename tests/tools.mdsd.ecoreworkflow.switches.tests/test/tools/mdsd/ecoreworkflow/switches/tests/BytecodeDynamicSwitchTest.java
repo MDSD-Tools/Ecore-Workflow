@@ -2,7 +2,6 @@ package tools.mdsd.ecoreworkflow.switches.tests;
 
 import org.eclipse.emf.ecore.EObject;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import tools.mdsd.ecoreworkflow.switches.ApplyableSwitch;
 import tools.mdsd.ecoreworkflow.switches.BytecodeDynamicSwitch;
@@ -18,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.TestscenarioPackage.Literals.*;
 import static tools.mdsd.ecoreworkflow.switches.testmodel.testscenario2.Testscenario2Package.Literals.*;
 
-@Disabled
+
 class BytecodeDynamicSwitchTest {
   @Nested
   class ConformsToSwitchingRules extends SwitchingRulesBehaviourTest {

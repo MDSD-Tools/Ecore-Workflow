@@ -63,7 +63,7 @@ class MSwitchClassGenerator implements PackageLevelCodeFileGenerator {
 		
 		public class «className»<T> extends MSwitch<T> implements MergeableSwitch<«className»<T>, «className»<T>> {
 			private static «genPackage.importedPackageInterfaceName» MODEL_PACKAGE = «genPackage.importedPackageInterfaceName».eINSTANCE;
-			«FOR c:genPackage.genClasses»
+			«FOR c:genPackage.allSwitchGenClasses»
 			private Function<«c.importedInterfaceName»,T> «getCaseName(c)»;
 			«ENDFOR»
 		
@@ -74,8 +74,8 @@ class MSwitchClassGenerator implements PackageLevelCodeFileGenerator {
 			protected T doSwitch(int classifierID, EObject eObject) throws MSwitch.SwitchingException {
 				T result;
 				switch(classifierID) {
-					«FOR c : genPackage.genClasses»
-					case «genPackage.importedPackageInterfaceName».«genPackage.getClassifierID(c)»: {
+					«FOR c : genPackage.allSwitchGenClasses»
+					case «c.genPackage.importedPackageInterfaceName».«genPackage.getClassifierID(c)»: {
 						«c.importedInterfaceName» casted = («c.importedInterfaceName») eObject;
 						if («getCaseName(c)» != null) {
 							result = «getCaseName(c)».apply(casted);
@@ -97,18 +97,18 @@ class MSwitchClassGenerator implements PackageLevelCodeFileGenerator {
 			}
 			
 			public «className»<T> merge(«className»<T> other) {
-				«FOR field: genPackage.genClasses.map[caseName]»
+				«FOR field: genPackage.allSwitchGenClasses.map[caseName]»
 				if (other.«field» != null) this.«field» = other.«field»;
 				«ENDFOR»
 				if (other.defaultCase != null) this.defaultCase = other.defaultCase;
 				return this;
 			} 
 			
-			«FOR c : genPackage.genClasses»
+			«FOR c : genPackage.allSwitchGenClasses»
 			public interface «getInterfaceName(c)»<T> extends Function<«c.importedInterfaceName»,T> {}
 			«ENDFOR»
 			
-			«FOR c : genPackage.genClasses»
+			«FOR c : genPackage.allSwitchGenClasses»
 			public «className»<T> when(«getInterfaceName(c)»<T> then) {
 				this.«getCaseName(c)» = then;
 				return this;
@@ -123,9 +123,9 @@ class MSwitchClassGenerator implements PackageLevelCodeFileGenerator {
 			public Map<EClass, Function<EObject, T>> getCases() {
 			  Map<EClass, Function<EObject, T>> definedCases = new HashMap<>();
 			  
-			  «FOR c:genPackage.genClasses»
+			  «FOR c:genPackage.allSwitchGenClasses»
 			  if (this.«getCaseName(c)» != null) {
-			  	definedCases.put(«genPackage.importedPackageInterfaceName».Literals.«genPackage.getClassifierID(c)», this.«getCaseName(c)».compose(o -> («c.importedInterfaceName») o));
+			  	definedCases.put(«c.genPackage.importedPackageInterfaceName».Literals.«genPackage.getClassifierID(c)», this.«getCaseName(c)».compose(o -> («c.importedInterfaceName») o));
 			  }
 			  «ENDFOR»
 			  

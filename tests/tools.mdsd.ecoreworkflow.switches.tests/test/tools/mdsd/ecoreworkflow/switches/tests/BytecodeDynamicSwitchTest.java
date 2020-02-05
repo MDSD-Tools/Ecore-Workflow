@@ -8,11 +8,13 @@ import tools.mdsd.ecoreworkflow.switches.BytecodeDynamicSwitch;
 import tools.mdsd.ecoreworkflow.switches.DynamicSwitch;
 import tools.mdsd.ecoreworkflow.switches.InspectableSwitch;
 import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.TestscenarioFactory;
-import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario2.Testscenario2Factory;
+import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.TestscenarioPackage;
+import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario2.Testscenario2Package;
 import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario3.Testscenario3Factory;
 import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario3.Testscenario3Package;
 import tools.mdsd.ecoreworkflow.switches.tests.builders.BytecodeDynamicSwitchBuilder;
 import tools.mdsd.ecoreworkflow.switches.tests.builders.SwitchBuilder;
+import tools.mdsd.ecoreworkflow.switches.tests.templates.CrossPackageSwitchingRulesBehaviourTest;
 import tools.mdsd.ecoreworkflow.switches.tests.templates.InspectableBehaviourTest;
 import tools.mdsd.ecoreworkflow.switches.tests.templates.MergeableSwitchBehaviourTest;
 import tools.mdsd.ecoreworkflow.switches.tests.templates.SwitchingRulesBehaviourTest;
@@ -51,6 +53,17 @@ class BytecodeDynamicSwitchTest {
       return new  BytecodeDynamicSwitchBuilder<T>();
     }
     
+  }
+  
+  @Nested
+  class ConformsToCrossPackageSwitchingRulesBehaviour extends CrossPackageSwitchingRulesBehaviourTest {
+    @Override
+    protected DynamicSwitch<String> getSubject() {
+      return new BytecodeDynamicSwitch<String>()
+          .addPackage(TestscenarioPackage.eINSTANCE)
+          .addPackage(Testscenario2Package.eINSTANCE)
+          .addPackage(Testscenario3Package.eINSTANCE);
+    }
   }
   
   @Test

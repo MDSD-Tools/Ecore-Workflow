@@ -12,7 +12,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: tools.mdsd.ecoreworkflow.switches;bundle-version="0.1.0",
  org.eclipse.emf.ecore;bundle-version="2.18.0",
  tools.mdsd.ecoreworkflow.switches.testmodel;bundle-version="0.1.0",
- tools.mdsd.ecoreworkflow.switches.testmodel2;bundle-version="0.1.0"
+ tools.mdsd.ecoreworkflow.switches.testmodel2;bundle-version="0.1.0",
+ tools.mdsd.ecoreworkflow.switches.testmodel3;bundle-version="0.1.0"
 Export-Package: tools.mdsd.ecoreworkflow.switches.tests,
  tools.mdsd.ecoreworkflow.switches.tests.builders,
  tools.mdsd.ecoreworkflow.switches.tests.templates

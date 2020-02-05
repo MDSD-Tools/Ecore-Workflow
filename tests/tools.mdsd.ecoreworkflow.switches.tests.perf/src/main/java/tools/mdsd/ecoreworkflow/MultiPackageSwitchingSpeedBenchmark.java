@@ -7,6 +7,7 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 import tools.mdsd.ecoreworkflow.switches.DynamicSwitch;
+import tools.mdsd.ecoreworkflow.switches.BytecodeDynamicSwitch;
 import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.TestscenarioFactory;
 import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario2.Testscenario2Factory;
 
@@ -18,6 +19,7 @@ public class MultiPackageSwitchingSpeedBenchmark {
     SwitchConfigurator conf = new SwitchConfigurator();
     ComposedSwitch<String> composedSwitch = conf.buildComposedSwitch();
     DynamicSwitch<String> dynamicSwitch = conf.buildComposedDynamicSwitch();
+    DynamicSwitch<String> bytecodeSwitch = conf.buildDynamicBytecodeSwitch();
   }
   
   @State(Scope.Thread)
@@ -53,6 +55,13 @@ public class MultiPackageSwitchingSpeedBenchmark {
   public void dynamicSwitch(BenchmarkState benchmarkState, ThreadState threadState, Blackhole blackHole) {
     for (EObject obj: threadState.testObjects) {
       blackHole.consume(benchmarkState.dynamicSwitch.doSwitch(obj));
+    }
+  }
+  
+  @Benchmark
+  public void bytecodeSwitch(BenchmarkState benchmarkState, ThreadState threadState, Blackhole blackHole) {
+    for (EObject obj: threadState.testObjects) {
+      blackHole.consume(benchmarkState.bytecodeSwitch.doSwitch(obj));
     }
   }
   

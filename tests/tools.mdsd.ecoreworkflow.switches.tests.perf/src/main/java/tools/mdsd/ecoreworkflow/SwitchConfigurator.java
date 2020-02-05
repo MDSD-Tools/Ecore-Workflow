@@ -9,6 +9,7 @@ import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario2.Z;
 import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario2.util.Testscenario2Switch;
 import tools.mdsd.ecoreworkflow.switches.DynamicSwitch;
 import tools.mdsd.ecoreworkflow.switches.HashDynamicSwitch;
+import tools.mdsd.ecoreworkflow.switches.BytecodeDynamicSwitch;
 import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.*;
 import static tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.TestscenarioPackage.Literals.*;
 import static tools.mdsd.ecoreworkflow.switches.testmodel.testscenario2.Testscenario2Package.Literals.*;
@@ -78,5 +79,18 @@ public class SwitchConfigurator {
         return "z";
       }
     };
+  }
+
+  public DynamicSwitch<String> buildDynamicBytecodeSwitch() {
+    BytecodeDynamicSwitch<String> sw = new BytecodeDynamicSwitch<String>();
+    sw
+        .dynamicCase(L, (EObject l)-> "l")
+        .dynamicCase(B, (EObject b)-> "b")
+        .dynamicCase(C, (EObject c)-> "c")
+        .dynamicCase(H, (EObject h)-> "h")
+        .defaultCase((EObject object)-> "*")
+        .dynamicCase(Y, (EObject y)-> "y")
+        .dynamicCase(Z, (EObject z)-> "z");
+    return sw.precompile();
   }
 }

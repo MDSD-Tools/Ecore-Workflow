@@ -32,11 +32,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EcorePackage;
-import com.google.common.collect.Streams;
 import org.eclipse.emf.ecore.EClassifier;
 import net.bytebuddy.jar.asm.Opcodes;
 import net.bytebuddy.jar.asm.Type;
@@ -291,7 +291,7 @@ public class BytecodeDynamicSwitch<T> extends AbstractInspectableDynamicSwitch<T
       .flatMap(c -> c.getEAllSuperTypes().stream())
       .collect(Collectors.toSet());
     
-      Streams.concat(implicitSupertypes.stream(), implicitClasses.stream())
+      Stream.concat(implicitSupertypes.stream(), implicitClasses.stream())
       .map(EClass::getEPackage)
       .forEach(allPackages::add);
     

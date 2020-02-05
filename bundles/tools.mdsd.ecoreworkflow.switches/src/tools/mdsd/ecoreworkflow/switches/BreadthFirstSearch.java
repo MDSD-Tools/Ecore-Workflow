@@ -8,7 +8,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 
-class BreadthFirstSearch<T> {
+public class BreadthFirstSearch<T> {
 
   /**
    * perform a BreathFirstSearch in an acyclic graph represented by a root node and an exploration.

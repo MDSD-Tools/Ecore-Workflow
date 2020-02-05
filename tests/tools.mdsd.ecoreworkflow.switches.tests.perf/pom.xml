@@ -10,6 +10,7 @@
    <name>JMH benchmark for Ecore Switches, including our custom MSwitch and DynamicSwitch</name>
 
    <dependencies>
+      <!-- as this is no tycho package, be sure to re-enumerate all dependencies here that the benchmark relies on -->
       <dependency>
          <groupId>org.openjdk.jmh</groupId>
          <artifactId>jmh-core</artifactId>
@@ -40,6 +41,12 @@
       	<artifactId>tools.mdsd.ecoreworkflow.switches</artifactId>
       	<version>0.1.0-SNAPSHOT</version>
       </dependency>
+      
+      <dependency>
+	    <groupId>net.bytebuddy</groupId>
+	    <artifactId>byte-buddy</artifactId>
+	    <version>1.9.0</version>
+	  </dependency>
       
       <dependency>
       	<groupId>org.eclipse.emf</groupId>

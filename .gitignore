@@ -1,2 +1,6 @@
 target/
 bin/
+xtend-gen/
+
+*.xtendbin
+*._trace

@@ -11,6 +11,7 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import tools.mdsd.ecoreworkflow.switches.DynamicSwitch;
+import tools.mdsd.ecoreworkflow.switches.HashDynamicSwitch;
 import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.TestscenarioFactory;
 import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.util.TestscenarioSwitch;
 
@@ -24,6 +25,7 @@ public class SwitchingSpeedBenchmark {
     TestscenarioSwitch<String> classicSwitch = conf.buildClassicSwitch();
     TestscenarioMSwitch<String> mswitch = conf.buildMSwitch();
     DynamicSwitch<String> dynamicSwitch = conf.buildDynamicSwitch();
+    DynamicSwitch<String> dynamicBytecodeSwitch = conf.buildDynamicBytecodeSwitch();
   }
   
   @State(Scope.Thread)
@@ -63,6 +65,13 @@ public class SwitchingSpeedBenchmark {
   public void dynamicSwitch(BenchmarkState benchmarkState, ThreadState threadState, Blackhole blackHole) {
     for (EObject obj: threadState.testObjects) {
       blackHole.consume(benchmarkState.dynamicSwitch.doSwitch(obj));
+    }
+  }
+  
+  @Benchmark
+  public void dynamicBytecodeSwitch(BenchmarkState benchmarkState, ThreadState threadState, Blackhole blackHole) {
+    for (EObject obj: threadState.testObjects) {
+      blackHole.consume(benchmarkState.dynamicBytecodeSwitch.doSwitch(obj));
     }
   }
   

@@ -19,7 +19,7 @@ public class MultiPackageSwitchingSpeedBenchmark {
     SwitchConfigurator conf = new SwitchConfigurator();
     ComposedSwitch<String> composedSwitch = conf.buildComposedSwitch();
     DynamicSwitch<String> dynamicSwitch = conf.buildComposedDynamicSwitch();
-    DynamicSwitch<String> bytecodeSwitch = conf.buildDynamicBytecodeSwitch();
+    DynamicSwitch<String> bytecodeSwitch = conf.buildComposedDynamicBytecodeSwitch();
   }
   
   @State(Scope.Thread)

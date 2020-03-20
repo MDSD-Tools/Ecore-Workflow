@@ -80,8 +80,21 @@ public class SwitchConfigurator {
       }
     };
   }
-
+  
   public DynamicSwitch<String> buildDynamicBytecodeSwitch() {
+    BytecodeDynamicSwitch<String> sw = new BytecodeDynamicSwitch<String>();
+    sw
+        .dynamicCase(L, (EObject l)-> "l")
+        .dynamicCase(B, (EObject b)-> "b")
+        .dynamicCase(C, (EObject c)-> "c")
+        .dynamicCase(H, (EObject h)-> "h")
+        .defaultCase((EObject object)-> "*")
+        .dynamicCase(Y, (EObject y)-> "y")
+        .dynamicCase(Z, (EObject z)-> "z");
+    return sw.precompile();
+  }
+  
+  public DynamicSwitch<String> buildComposedDynamicBytecodeSwitch() {
     BytecodeDynamicSwitch<String> sw = new BytecodeDynamicSwitch<String>();
     sw
         .dynamicCase(L, (EObject l)-> "l")

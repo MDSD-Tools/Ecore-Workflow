@@ -1,5 +1,4 @@
 package tools.mdsd.ecoreworkflow.switches;
-// TODO uncomment the following. It is only commented out, because xtend classes don't make it into the maven build up to now
 
 import java.io.OutputStream
 import java.io.PrintWriter

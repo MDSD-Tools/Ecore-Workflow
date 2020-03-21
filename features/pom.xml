@@ -13,6 +13,7 @@
 	<modules>
 		<module>tools.mdsd.ecoreworkflow.builder.feature</module>
 		<module>tools.mdsd.ecoreworkflow.mwe2lib.feature</module>
+		<module>tools.mdsd.ecoreworkflow.switches.feature</module>
 	</modules>
 	
 </project>

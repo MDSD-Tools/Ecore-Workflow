@@ -1,3 +1,6 @@
 target/
 bin/
 **/.polyglot.build.properties
+xtend-gen/
+*.xtendbin
+*._trace

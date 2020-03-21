@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MDSD.tools Ecore Workflow Mwe2 Library for Xtext
+Bundle-SymbolicName: tools.mdsd.ecoreworkflow.mwe2lib.xtext
+Bundle-Version: 1.0.0.qualifier
+Automatic-Module-Name: tools.mdsd.ecoreworkflow.mwe2lib.xtext
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.eclipse.emf.mwe.utils,
+ org.eclipse.emf.ecore,
+ org.eclipse.emf.mwe.core,
+ org.apache.commons.logging,
+ org.eclipse.core.resources,
+ org.eclipse.xtext.xtext.generator,
+ org.eclipse.xtend.lib
+Import-Package: com.google.inject;version="1.3.0",
+ org.eclipse.core.runtime
+Export-Package: tools.mdsd.ecoreworkflow.mwe2lib.xtext.config

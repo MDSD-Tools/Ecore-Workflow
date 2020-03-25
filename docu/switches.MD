@@ -1,11 +1,73 @@
 # Advanced Ecore Switching
-
+The Ecore advanced switching project is about bringing composability and cross-package-capabilities to EMF switches without harming performance too much.
 ## Introduction and concepts
+Switches are an important feature for performing calculations upon EMF model instances. Let us start with a brief introduction on what EMF code generation means and how switches can be used.
 ### EMF 
 [EMF](https://www.eclipse.org/modeling/emf/) is a modeling framework. It allows code generation from Ecore models.
-What does switching mean? :pencil:
+Assume the following simple ecore model:
 
-How do the different approaches work? :pencil:
+![](https://i.imgur.com/doM4ay5.png)
+
+EMF allows us to create a GenModel based upon it (wich also includes details about the generation process, such as included classes, package names, and the destination folder). Based upon the genmodel, java code can be automatically generated:
+
+````
+    interface StrassenFahrzeug {}
+    interface PKW extends StrassenFahrzeug {}
+    interface LKW extends StrassenFahrzeug {}
+    
+    class StrassenFahrzeugImpl implements StrassenFahrzeug {…}
+    class PKWImpl implements PKW {…}
+    class LKWImpl implements LKW {…}
+    
+    class TransportmittelPackage {…}
+    class TransportmittelSwitch {…}
+````
+For each class in our model, a corresponding interface is created. Apart from that, the generated classes include implementation classes for the model, a package class for reflectively inspecting the packages class hierarchy, a factory and a switch class.
+
+
+### Switching
+Switches in EMF allow to call different methods, based on an object's dynamic type. They are called switches, because - similar to a switch-case-control structure - they transfer control flow to one of several case branches, depending on an input value. In contrast to a usual switch-case control structure, with EMF switches, the branch that is taken does not depend on the entire object value, but on only on its dynamic type.
+A case definition and switch invocation in our api might look like this:
+````
+float maxSpeed = new TransportationMSwitch<Float>()
+    .when((LKW lkw) -> 80.0f)
+    .when((PKW pkw) -> 120.0f)
+    .orElse((EObject object) -> Float.POSITIVE_INFINITY)   
+    .doSwitch(anEObject);
+````
+
+#### Purpose
+The switching functionality is similar to pattern matching and serves a similar purpose as multimethods: It enables the creation of type-specific behaviour (as with polimorphism), but without incorporating this behaviour into the types' classes themselves. The model and its types do not need to know about the different switches that might exist.
+For example, in the code example above, a type-specific speed limit was implemented without changes to the model.
+
+#### Semantics
+EMFs switching semantics were reverse-engineered from the original switch class's [template](https://github.com/eclipse/emf/blob/d45610f/plugins/org.eclipse.emf.codegen.ecore/templates/model/SwitchClass.javajet) and from the [implementation](https://github.com/eclipse/emf/blob/d45610f/plugins/org.eclipse.emf.codegen.ecore/templates/model/SwitchClass.javajet) of `GenPackage#getAllSwitchGenClasses()` used in the template.
+It boils down to the following rules:
+* An object matches a case, if it's type is a subtype of the type used in the case definition. The default case matches all objects.
+* If an object's type matches several of the cases, the most specific one is invoked first. If a case returns `null`, less specific cases are invoked, until one returns a non-null value (which is then returned as result of the switch invocation) or all matching cases have been tried (in which case `null` is returned as result of the switch invocation).
+* A case defined on type A is more specific than a case defined on type B for an object of dynamic type X if the longest inheritance path from X to A is shorter than the longest inheritance path from X to B OR if these longest paths are of the same lenght and A is found before B in a breadth-first-search starting at X that only considers paths of that specific length. (This implies that in the multi-inheritance setting, `extends A, B` can have a different effect than `extends B,A`.)
+
+### Aim of this project
+It turns out that in order to define the switching rules on EMF's built-in switches, sublclassing is necessary. This contradicts the *Composition over Subclassing* design pattern and imposes limitations to the reusability of such defined switching rules: While a defined switch can also be subclassed and extended with more special cases or modified with partially overridden behaviour, it is not possible in a non-verbose way to reuse the behaviour of two or more switches at once. Extending two switch classes would require multi-inheritance in Java.
+
+Another downside: Because EMFs approach relies on per-package code generation at compile time, case definition is always limited to the types of one package at a time.
+While EMF does offer its `ComposedSwitch` to circumvent this issue, that switch is slow at runtime and only works with packages that have a disjunct inheritance hierarchy.
+
+The aim of this project is to allow switches to be composed and to also provide a possibility of cross-package switching without incurring an unbearable performance loss in comparison to the classic approach in terms of switching throughput.
+
+### Switching aproaches
+
+#### Classic EMF aproach
+
+The classic EMF approach works as follows:
+1. At code generation time of a package, its class hierarchy is analyzed. A package-specific switch class is generated that contains method stubs for all types
+
+#### MSwitch aproach
+:pencil:
+#### HashDynamisSwitch aproach
+:pencil:
+#### BytecodeDynamicSwitch aproach
+:pencil:
 
 ## Performance Evaluation
 [JMH](https://openjdk.java.net/projects/code-tools/jmh/) was used to measure the most important performance indicator, the throughput, ie the speed at which objects can be processed by a readily instantiated and configured switch.
@@ -25,11 +87,16 @@ This measuring approach does not take into account the time it takes to configur
 
 ## Build
 1. Clone the repository:
-   ``git clone https://github.com/.../Ecore-Workflow``
-   `cd Ecore-Workflow`
+   ````
+       git clone https://github.com/.../Ecore-Workflow
+       cd Ecore-Workflow
+   ````
 2. Run maven:
-   `mvn clean verify`
-    (Pitfall: On windows the `JAVAHOME` variable must be set). Required dependencies will be downloaded automatically and an eclipse update site will be created in the subfolder `releng/tools.mdsd.ecoreworkflow.updatesite/target/repository`. If you want to temporarily host an update site for testing, you can start a local http server:
+   ```
+       mvn clean verify
+   ```
+    (Pitfall: On windows the `JAVAHOME` variable must be set). Required dependencies will be downloaded automatically and an eclipse update site will be created in the subfolder `releng/tools.mdsd.ecoreworkflow.updatesite/target/repository`.
+3. If you want to temporarily host an update site for testing, you can start a local http server:
     ```
         cd releng/tools.mdsd.ecoreworkflow.updatesite/target/repository
         python -m http.server 8080
@@ -38,10 +105,13 @@ This measuring approach does not take into account the time it takes to configur
 ## Usage
 
 The code generation is accessible as a [MWE2 component](https://www.eclipse.org/Xtext/documentation/306_mwe2.html) and can be combined with standard Ecore code generation using an adecuate MWE2 workflow that combines these two steps.
-There are several possibilities to invoke such a workflow: (a) as part of a maven tycho build, (b) directly from an Eclipse instance or \(c\) using the experimental Eclipse builder that is included in Ecore-Workflow.
+There are several possibilities to invoke such a workflow:
+(a) as part of a maven tycho build,
+(b) directly from an Eclipse instance or
+\(c\) using the experimental Eclipse builder that is included in Ecore-Workflow.
 
 ### (a) as part of a maven tycho build
-Following steps conceptually describe how to incorporate advanced switching capability into an ecore model build with maven tycho. Instead of following the steps, you can clone the [example repo](https://github.com/christianthechristian/example_mswitch_maven_project).
+Following steps conceptually describe how to incorporate advanced switching capability into an ecore model build with maven tycho. Instead of following the steps one by one, you can clone the [example repo](https://github.com/christianthechristian/example_mswitch_maven_project).
 1. **Create a maven project** with the usual structure used in MDSD projects:
     ````
     |- .mvn
@@ -56,7 +126,7 @@ Following steps conceptually describe how to incorporate advanced switching capa
     ````
     Especially note:
     1. In `extensions.xml` add `org.eclipse.tycho.extras.tycho-pomless` and `org.palladiosimulator.tycho-tp-refresh-maven-plugin` as extensions.
-    2. In the `tp.target` target definition the repositories that will be used to satisfy elipse plugins' dependencies are specified. You have to add the repository that resulted from the build. You can use `https://updatesite.mdsd.tools/ecore-workflow/releases/0.1.0/` for the currently deployed oficial version of the ecore workflow or you can use your locally hosted update site by adding a section as follows:
+    2. In the `tp.target` target definition the repositories that will be used to satisfy elipse plugins' dependencies are specified. You have to add the repository that resulted from the build. You can use [`https://updatesite.mdsd.tools/ecore-workflow/releases/0.1.0/`](https://updatesite.mdsd.tools/ecore-workflow/releases/0.1.0/) for the currently deployed oficial version of the ecore workflow or you can use your locally hosted update site by adding a section such as follows:
         ```
         <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 		  <repository location="http://localhost:8080/"/>
@@ -120,10 +190,10 @@ Following steps conceptually describe how to incorporate advanced switching capa
 4. Add a workflow in `model/workflow.mwe2` with `EcoreGenerator` and `AdditionalTemplateGenerator`.
 5. Make sure that the current target platform that eclipse uses includes the features from the Ecore-Workflow update site.
 6. Add the plugins `tools.mdsd.ecoreworkflow.switches` and `tools.mdsd.ecoreworkflow.mwe2lib` to the requirements in `MANIFEST.MF`.
-7. Right click -> Run as MWE Workflow.
+7. Right click the workflow -> Run as MWE Workflow.
    That will build the model into the `src-gen` folder.
 ### \(c\) using the experimental Eclipse builder that is included in Ecore-Workflow
-1. Open this project in Eclipse (= Java 2019-09, with the modeling tools and ByteBuddy also installed).
+1. Open this project in Eclipse (= Java IDE 2019-09, with the modeling tools and ByteBuddy also installed).
 2. Right click some eclipse Project -> Run as -> Eclipse Application
     * The target platform: must include ByteBuddy, Ecore, etc.
     * As plugins, use all workspace and application plugins.
@@ -165,13 +235,15 @@ These components play a part in switching:
 | tools.mdsd.ecoreworkflow.switches.testmodel3 | added | just another test model, that does not inherit from testmodel (so that its switch can be combined with the testmodel for benchmarking EMF's ComposedSwitch)
 | tools.mdsd.ecoreworkflow.switches.tests.perf | added | contains benchmarks, uses JMH, warning: not a tycho project, and therefore does not use referenced tycho projects' transitive dependencies.
 
+Details on the implementation can be found in the code which should be self-explanatory.
+
 ### Running Tests
 
 Tests are run with `mvn clean verify`.
 
 ### Running Benchmarks
 
-Benchmarking takes precious build time and are only run when explicitly called with:
+Benchmarking takes precious build time and therefore are only enabled in a specific maven profile. You can enable this profile by an additional command line parameter:
 ```
     mvn clean verify -Dbenchmarking=true
 ```

@@ -6,8 +6,19 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import tools.mdsd.ecoreworkflow.switches.bytecodegen.ByteCodeSwitchCompiler;
 
+/**
+ * A dynamic switch that is accelerated using bytecode generation.
+ * Note that for this to work, knowledge of the complete package hierarchy that might
+ * be fed into the doSwitch method is required. Use the addPackage-method to add the
+ * possible packages.
+ *
+ * @param <T> the return type of the case methods
+ */
 public class BytecodeDynamicSwitch<T> extends AbstractInspectableDynamicSwitch<T> implements DynamicSwitch<T>, ApplyableSwitch<T>, InspectableSwitch<T> {
   
+  /**
+   * a pre-compiled switch to which we delegate all doSwitch calls
+   */
   private ApplyableSwitch<T> compiledSwitch;
   private Set<EPackage> explicitPackages = new HashSet<>();
   
@@ -18,6 +29,16 @@ public class BytecodeDynamicSwitch<T> extends AbstractInspectableDynamicSwitch<T
     return this;
   }
   
+  /**
+   * Tell the switch that objects fed into the switch might have
+   * a dynamic type of a class in the given package.
+   * 
+   * If a package's class is part of a case definition, that package is
+   * already implicitly added and it is not necessary to call addPackage
+   * 
+   * @param ePackage
+   * @return itself (builder pattern)
+   */
   public BytecodeDynamicSwitch<T> addPackage(EPackage ePackage) {
     explicitPackages.add(ePackage);
     return this;
@@ -25,6 +46,9 @@ public class BytecodeDynamicSwitch<T> extends AbstractInspectableDynamicSwitch<T
   
   @Override
   protected boolean canDafineCases() {
+    /** don't allow to define more cases once the switch has been compiled.
+        Clients who need this can merge the switch into a new one and add their
+       cases there. **/
     return compiledSwitch == null;
   }
 

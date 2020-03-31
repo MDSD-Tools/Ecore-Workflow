@@ -18,7 +18,7 @@ import net.bytebuddy.jar.asm.Label;
 import net.bytebuddy.jar.asm.MethodVisitor;
 import net.bytebuddy.jar.asm.Opcodes;
 import net.bytebuddy.jar.asm.Type;
-import tools.mdsd.ecoreworkflow.switches.MSwitch.SwitchingException;
+import tools.mdsd.ecoreworkflow.switches.SwitchingException;
 
 /**
  * appends the body of a DynamicBytecodesSwitch's doSwitch method

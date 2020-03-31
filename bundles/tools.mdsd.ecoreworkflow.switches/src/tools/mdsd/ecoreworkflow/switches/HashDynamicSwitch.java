@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import tools.mdsd.ecoreworkflow.switches.MSwitch.SwitchingException;
 
 /**
  * A dynamic switch implementation that is optimized for being quick when the objects the graph is
@@ -40,9 +37,11 @@ public class HashDynamicSwitch<T> extends AbstractInspectableDynamicSwitch<T>
   public T doSwitch(EObject object) {
     EClass eClass = object.eClass();
 
+    // determine in which order to call which cases
     Function<EObject, T>[] targets = cachedInvokationSequences
         .computeIfAbsent(eClass, this::calculateInvocationSequence);
-
+    
+    // and then call those cases until one does not delegate.
     for (Function<EObject, T> target : targets) {
       T evaluation = target.apply(object);
       if (evaluation != null) {
@@ -71,8 +70,11 @@ public class HashDynamicSwitch<T> extends AbstractInspectableDynamicSwitch<T>
 
     // In a tree that only contains the longest possibly path to each ancestor, do a
     // breadth-first-search and add all results to a list of fall-through-targets.
+    // This algorithm is compatible to EMF's semantics which were reverse-engineered.
+    
     List<Function<EObject, T>> invocations = new ArrayList<>();
     new BreadthFirstSearch<EClass>().scan(eClass, (c, r) -> {
+      // the second part of the condition ensures that we are exploring a longest path.
       if (caseDefinitions.containsKey(c) && r.stream().noneMatch(c::isSuperTypeOf)) {
         invocations.add(caseDefinitions.get(c));
       }

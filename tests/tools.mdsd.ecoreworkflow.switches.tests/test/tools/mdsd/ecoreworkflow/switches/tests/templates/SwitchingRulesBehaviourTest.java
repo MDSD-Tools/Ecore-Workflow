@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import org.eclipse.emf.ecore.EObject;
 import org.junit.jupiter.api.Test;
 import tools.mdsd.ecoreworkflow.switches.ApplyableSwitch;
-import tools.mdsd.ecoreworkflow.switches.MSwitch.SwitchingException;
+import tools.mdsd.ecoreworkflow.switches.SwitchingException;
 import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.F;
 import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.TestscenarioFactory;
 import tools.mdsd.ecoreworkflow.switches.testmodel.testscenario.TestscenarioPackage.Literals;

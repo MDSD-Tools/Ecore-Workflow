@@ -24,9 +24,14 @@ import org.eclipse.emf.mwe2.runtime.Mandatory;
 
 import tools.mdsd.ecoreworkflow.mwe2lib.util.URIToPath;
 
+/**
+ * MWE2 component used to generate an additional extra file for an ecore package
+ * based on a template.
+ *
+ */
 public class AdditionalTemplateGenerator extends AbstractWorkflowComponent2 {
 	
-	private String destPath;
+    private String destPath;
 	private String genModel;
 	private List<PackageLevelCodeFileGenerator> packageLevelGenerators;
 	
@@ -35,16 +40,33 @@ public class AdditionalTemplateGenerator extends AbstractWorkflowComponent2 {
 		packageLevelGenerators = new ArrayList<>();
 	}
 	
+	/**
+	 * Set the path to the base folder.
+     * (This is usually a platform:-URL pointing at the target project's src-gen folder).
+     * The template's relative path will be resolved against this URL.
+     * 
+	 * @param destPath path to the base folder
+	 */
 	@Mandatory
 	public void setDestPath(String destPath) {
 		this.destPath = destPath;
 	}
 	
+	/**
+     * Set the path to the .genmodel-file.
+     * The template will have acces to the genmodel.
+     * 
+	 * @param genModel path to the .genmodel file
+	 */
 	@Mandatory
 	public void setGenModel(String genModel) {
 		this.genModel = genModel;
 	}
 	
+	/**
+	 * Add a template (=generator) to be executed.
+	 * @param gen classname of the generator to be added. Must be on the classpath and must be a subclass of tools.mdsd.ecoreworkflow.mwe2lib.component.PackageLevelCodeFileGenerator.
+	 */
 	public void addPackageLevelGenerator(String gen) {
 		try {
 			packageLevelGenerators.add((PackageLevelCodeFileGenerator) Class.forName(gen).getConstructor().newInstance());
@@ -53,21 +75,31 @@ public class AdditionalTemplateGenerator extends AbstractWorkflowComponent2 {
 		}
 	}
 	
+	// This method is the workflow component's entry point.
 	@Override
 	protected void invokeInternal(WorkflowContext workflowContext, ProgressMonitor progressMonitor, Issues issues) {
 		// ProgressMonitor is a (useless) NullProgressMonitor in the mwe2 context :(
 		progressMonitor.beginTask("Creating additional templates", 20);
 		
-		ResourceSet resSet = new ResourceSetImpl();
-		Resource resource = resSet.getResource(URI.createURI(genModel), true);
-		GenModel genModel = (GenModelImpl) resource.getContents().get(0);
-		
-		runGenerator(genModel);
+		GenModel loadedGenModel = loadGenModel(this.genModel);
+		runGenerator(loadedGenModel);
 
 		progressMonitor.done();
 		
 	}
-
+	
+	/**
+	 * Load the genmodel as an ecore resource
+	 * @param pathToGenmodelFile TODO
+	 * @return
+	 */
+    private GenModel loadGenModel(String pathToGenmodelFile) {
+        ResourceSet resSet = new ResourceSetImpl();
+  		Resource resource = resSet.getResource(URI.createURI(pathToGenmodelFile), true);
+  		GenModel genModel = (GenModelImpl) resource.getContents().get(0);
+        return genModel;
+    }
+    
 	private void runGenerator(GenModel genModel) {
 		genModel.getGenPackages().forEach(this::generatePackageLevelCode);
 	}

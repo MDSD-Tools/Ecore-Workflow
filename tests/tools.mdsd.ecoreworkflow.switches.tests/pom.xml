@@ -1,0 +1,17 @@
+<project>
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+		<groupId>tools.mdsd.ecoreworkflow</groupId>
+		<artifactId>tests</artifactId>	
+		<version>0.1.0-SNAPSHOT</version>
+	</parent>
+
+    <artifactId>tools.mdsd.ecoreworkflow.switches.tests</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>eclipse-test-plugin</packaging>
+    
+    <properties>
+    	<version.jdk>8</version.jdk>
+    </properties>
+</project>

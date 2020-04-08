@@ -6,10 +6,13 @@ Bundle-Version: 0.1.0.qualifier
 Automatic-Module-Name: tools.mdsd.ecoreworkflow.mwe2lib
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Export-Package: tools.mdsd.ecoreworkflow.mwe2lib.bean,
- tools.mdsd.ecoreworkflow.mwe2lib.component
+ tools.mdsd.ecoreworkflow.mwe2lib.component,
+ tools.mdsd.ecoreworkflow.mwe2lib.util
 Require-Bundle: org.eclipse.emf.mwe.utils,
  org.eclipse.emf.ecore,
  org.eclipse.emf.mwe.core,
  org.apache.commons.logging,
- org.eclipse.core.resources
+ org.eclipse.core.resources,
+ org.eclipse.emf.codegen.ecore;bundle-version="2.18.0"
 Import-Package: org.eclipse.core.runtime
+DynamicImport-Package: *

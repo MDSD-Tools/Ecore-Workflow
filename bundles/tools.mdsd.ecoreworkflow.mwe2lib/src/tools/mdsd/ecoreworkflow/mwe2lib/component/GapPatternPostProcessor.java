@@ -17,16 +17,15 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.plugin.EcorePlugin;
 import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.emf.ecore.resource.impl.ExtensibleURIConverterImpl;
 import org.eclipse.emf.mwe.core.WorkflowContext;
 import org.eclipse.emf.mwe.core.issues.Issues;
 import org.eclipse.emf.mwe.core.lib.AbstractWorkflowComponent2;
 import org.eclipse.emf.mwe.core.monitor.ProgressMonitor;
+
+import tools.mdsd.ecoreworkflow.mwe2lib.util.URIToPath;
 
 public class GapPatternPostProcessor extends AbstractWorkflowComponent2 {
 	private static final String CLASSNAME_MATCHER_PATTERN =
@@ -61,11 +60,11 @@ public class GapPatternPostProcessor extends AbstractWorkflowComponent2 {
 			try {
 				List<Path> manualFolders = set.getManualSourceFolders().stream()
 						.map(URI::createURI)
-						.map(this::convertUri)
+						.map(new URIToPath()::convertUri)
 						.map(Paths::get).collect(Collectors.toList());
 				List<Path> generatedFolders = set.getGeneratedSourceFolders().stream()
 						.map(URI::createURI)
-						.map(this::convertUri)
+						.map(new URIToPath()::convertUri)
 						.map(Paths::get)
 						.collect(Collectors.toList());
 				
@@ -117,19 +116,4 @@ public class GapPatternPostProcessor extends AbstractWorkflowComponent2 {
 		}
 		arg1.done();
 	}
-
-	protected String convertUri(URI uri) {
-		if (uri.isPlatform()) {
-			if (Platform.isRunning()) {
-				return ResourcesPlugin.getWorkspace().getRoot()
-						.getFile(new org.eclipse.core.runtime.Path(uri.toPlatformString(true))).getLocation()
-						.toString();
-			} else {
-				return EcorePlugin.resolvePlatformResourcePath(uri.toPlatformString(true)).toFileString();
-			}
-		} else {
-			return uriConverter.normalize(uri).toFileString();
-		}
-	}
-
 }

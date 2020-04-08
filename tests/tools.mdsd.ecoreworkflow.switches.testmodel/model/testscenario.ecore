@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="testscenario" nsURI="http://mdsd.tools/ecoreworkflow/switches/tests/testscenario"
+    nsPrefix="testscenario">
+  <eClassifiers xsi:type="ecore:EClass" name="M"/>
+  <eClassifiers xsi:type="ecore:EClass" name="L" eSuperTypes="#//M"/>
+  <eClassifiers xsi:type="ecore:EClass" name="K" eSuperTypes="#//L"/>
+  <eClassifiers xsi:type="ecore:EClass" name="I"/>
+  <eClassifiers xsi:type="ecore:EClass" name="H"/>
+  <eClassifiers xsi:type="ecore:EClass" name="G" eSuperTypes="#//H"/>
+  <eClassifiers xsi:type="ecore:EClass" name="F"/>
+  <eClassifiers xsi:type="ecore:EClass" name="E" eSuperTypes="#//K #//D #//C #//F #//G #//I"/>
+  <eClassifiers xsi:type="ecore:EClass" name="D" eSuperTypes="#//B"/>
+  <eClassifiers xsi:type="ecore:EClass" name="C" eSuperTypes="#//A"/>
+  <eClassifiers xsi:type="ecore:EClass" name="B" eSuperTypes="#//A"/>
+  <eClassifiers xsi:type="ecore:EClass" name="A"/>
+</ecore:EPackage>

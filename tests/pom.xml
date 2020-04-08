@@ -11,7 +11,11 @@
 	<packaging>pom</packaging>
 	
 	<modules>
-		<!-- insert test folders here -->
+		<module>tools.mdsd.ecoreworkflow.switches.tests</module>
+		<module>tools.mdsd.ecoreworkflow.switches.testmodel</module>
+		<module>tools.mdsd.ecoreworkflow.switches.testmodel2</module>
+		<module>tools.mdsd.ecoreworkflow.switches.testmodel3</module>
+		<module>tools.mdsd.ecoreworkflow.switches.tests.perf</module>
 	</modules>
 	
 </project>

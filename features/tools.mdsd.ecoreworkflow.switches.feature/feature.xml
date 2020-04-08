@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="tools.mdsd.ecoreworkflow.switches.feature"
+      label="MDSD.tools EcoreWorkflow Switches"
+      version="0.1.0.qualifier"
+      plugin="org.palladiosimulator.branding">
+
+   <description>
+      Enables seamless build and use of advanced switches for ecore.
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import plugin="tools.mdsd.ecoreworkflow.mwe2lib"/>
+      <import plugin="org.eclipse.emf.mwe.core"/>
+      <import plugin="org.eclipse.emf.mwe.utils"/>
+   </requires>
+
+   <plugin
+         id="tools.mdsd.ecoreworkflow.switches"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

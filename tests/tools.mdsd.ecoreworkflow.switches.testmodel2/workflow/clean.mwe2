@@ -1,0 +1,17 @@
+module clean
+
+import tools.mdsd.ecoreworkflow.mwe2lib.bean.EclipseRCPSupportingStandaloneSetup
+import tools.mdsd.ecoreworkflow.mwe2lib.component.URISupportingDirectoryCleaner
+
+var workspaceRoot = "../../"
+
+Workflow {
+	bean = EclipseRCPSupportingStandaloneSetup {
+		scanClassPath = true
+		platformUri = workspaceRoot		
+	}
+
+	component = URISupportingDirectoryCleaner {
+		directory = "platform:/resource/tools.mdsd.ecoreworkflow.switches.testmodel2/src/"
+	}
+}

@@ -1,0 +1,33 @@
+module generate
+
+import org.eclipse.emf.mwe2.ecore.EcoreGenerator
+import tools.mdsd.ecoreworkflow.mwe2lib.bean.EclipseRCPSupportingStandaloneSetup
+import tools.mdsd.ecoreworkflow.mwe2lib.component.AdditionalTemplateGenerator
+import tools.mdsd.ecoreworkflow.mwe2lib.component.ContextDependentMapping
+var workspaceRoot = "../../"
+
+Workflow {
+	bean = EclipseRCPSupportingStandaloneSetup {
+		scanClassPath = false
+		platformUri = workspaceRoot
+		
+		uriMap = ContextDependentMapping {
+			onRunningPlatform = "platform:/plugin/tools.mdsd.ecoreworkflow.switches.testmodel/model/testscenario.genmodel"
+			onStandalone = "platform:/resource/tools.mdsd.ecoreworkflow.switches.testmodel/model/testscenario.genmodel"
+		}
+	}
+
+	component = EcoreGenerator {
+        generateCustomClasses = false
+        generateEdit = false
+        generateEditor = false
+        genModel = "platform:/resource/tools.mdsd.ecoreworkflow.switches.testmodel/model/testscenario.genmodel"
+        srcPath = "platform:/resource/tools.mdsd.ecoreworkflow.switches.testmodel/src/"
+    }
+    
+    component = AdditionalTemplateGenerator {
+		genModel = "platform:/resource/tools.mdsd.ecoreworkflow.switches.testmodel/model/testscenario.genmodel"
+		destPath = "platform:/resource/tools.mdsd.ecoreworkflow.switches.testmodel/src/"
+		packageLevelGenerator = "tools.mdsd.ecoreworkflow.switches.MSwitchClassGenerator"
+	}
+}

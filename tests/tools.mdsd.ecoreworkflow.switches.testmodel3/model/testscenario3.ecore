@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ecore:EPackage xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="testscenario3" nsURI="http://mdsd.tools/ecoreworkflow/switches/tests/testscenario3"
+    nsPrefix="testscenario3">
+  <eClassifiers xsi:type="ecore:EClass" name="Q" eSuperTypes="../../tools.mdsd.ecoreworkflow.switches.testmodel/model/testscenario.ecore#//A"/>
+</ecore:EPackage>

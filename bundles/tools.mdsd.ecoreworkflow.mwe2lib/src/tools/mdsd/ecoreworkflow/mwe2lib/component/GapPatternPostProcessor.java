@@ -29,14 +29,12 @@ import org.eclipse.emf.mwe.core.lib.AbstractWorkflowComponent2;
 import org.eclipse.emf.mwe.core.monitor.ProgressMonitor;
 
 public class GapPatternPostProcessor extends AbstractWorkflowComponent2 {
-	private static final String CLASSNAME_MATCHER_PATTERN =
-			"(?<=[^a-zA-Z\\d_$])(%s)(?=[^a-zA-Z\\d_$])";
-	
 	private static final String JAVAFILE_MATCHER_PATTERN = 
 			"([^\\n\\s]*).java$";
 
 	private static final Log LOG = LogFactory.getLog(GapPatternPostProcessor.class);
 	private final Collection<GapPatternFolderSet> folders = new LinkedList<>();
+	private String searchPattern = "(?<!\\bnew\\W)\\b(%s)(?=[^a-zA-Z\\d_$])(?!\\W+eINSTANCE\\b)";
 	private String replacementPattern = "$1Gen";
 	protected URIConverter uriConverter = new ExtensibleURIConverterImpl();
 
@@ -50,13 +48,17 @@ public class GapPatternPostProcessor extends AbstractWorkflowComponent2 {
 		this.folders.add(folders);
 	}
 
+	public void setSearchPattern(String searchPattern) {
+		this.searchPattern = searchPattern;
+	}
+
 	public void setReplacementPattern(String replacementPattern) {
 		this.replacementPattern = replacementPattern;
 	}
 
 	@Override
 	protected void invokeInternal(WorkflowContext arg0, ProgressMonitor arg1, Issues arg2) {
-		arg1.beginTask("Starting Gen-Pattern post processing", folders.size());
+		arg1.beginTask("Starting Gap-Pattern post processing", folders.size());
 		for (GapPatternFolderSet set : folders) {
 			try {
 				List<Path> manualFolders = set.getManualSourceFolders().stream()
@@ -103,7 +105,7 @@ public class GapPatternPostProcessor extends AbstractWorkflowComponent2 {
 					Files.move(processFile, targetPath, StandardCopyOption.REPLACE_EXISTING);
 					
 					String content = new String(Files.readAllBytes(targetPath), charset);
-					content = content.replaceAll(String.format(CLASSNAME_MATCHER_PATTERN, oldClassName), 
+					content = content.replaceAll(String.format(searchPattern, oldClassName), 
 							replacementPattern);
 					
 					Files.write(targetPath, content.getBytes(charset));

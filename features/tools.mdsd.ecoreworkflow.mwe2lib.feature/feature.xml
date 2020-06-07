@@ -2,7 +2,7 @@
 <feature
       id="tools.mdsd.ecoreworkflow.mwe2lib.feature"
       label="MDSD.tools EcoreWorkflow MWE2 Library"
-      version="0.1.0.qualifier"
+      version="0.1.1.qualifier"
       plugin="org.palladiosimulator.branding">
 
    <description url="http://www.example.com/description">

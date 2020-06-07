@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-   <feature url="features/tools.mdsd.ecoreworkflow.mwe2lib.feature_0.1.0.qualifier.jar" id="tools.mdsd.ecoreworkflow.mwe2lib.feature" version="0.1.0.qualifier">
+   <feature url="features/tools.mdsd.ecoreworkflow.mwe2lib.feature_0.1.0.qualifier.jar" id="tools.mdsd.ecoreworkflow.mwe2lib.feature" version="0.1.1.qualifier">
       <category name="ecoreworkflow"/>
    </feature>
-   <feature url="features/tools.mdsd.ecoreworkflow.mwe2lib.xtext.feature_0.1.0.qualifier.jar" id="tools.mdsd.ecoreworkflow.mwe2lib.xtext.feature" version="0.1.0.qualifier">
+   <feature url="features/tools.mdsd.ecoreworkflow.mwe2lib.xtext.feature_0.1.0.qualifier.jar" id="tools.mdsd.ecoreworkflow.mwe2lib.xtext.feature" version="0.1.1.qualifier">
       <category name="ecoreworkflow"/>
    </feature>
    <category-def name="ecoreworkflow" label="MDSD Tools Ecore Workflow"/>

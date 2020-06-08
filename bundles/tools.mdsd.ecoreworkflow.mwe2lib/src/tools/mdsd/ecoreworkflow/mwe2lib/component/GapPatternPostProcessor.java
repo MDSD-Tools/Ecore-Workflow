@@ -34,20 +34,46 @@ public class GapPatternPostProcessor extends AbstractWorkflowComponent2 {
 
 	private static final Log LOG = LogFactory.getLog(GapPatternPostProcessor.class);
 	private final Collection<GapPatternFolderSet> folders = new LinkedList<>();
+
+	/**
+	 * @see GapPatternPostProcessor.setSearchPattern(String searchPattern)
+	 */
 	private String searchPattern = "(?<!\\bnew\\W)\\b(%s)(?=[^a-zA-Z\\d_$])(?!\\W+eINSTANCE\\b)";
+
 	private String replacementPattern = "$1Gen";
+
 	protected URIConverter uriConverter = new ExtensibleURIConverterImpl();
 
 	private Charset charset = StandardCharsets.UTF_8;
-	
+
 	public void setCharset(Charset charset) {
 		this.charset = charset;
 	}
-	
+
 	public void addFolders(GapPatternFolderSet folders) {
 		this.folders.add(folders);
 	}
 
+	/**
+	 *  Sets the regex which is used to find the occurrences which are supposed to be replaced. The string
+	 *  should contain one string placeholder (%s), which will be used to insert the original class name
+	 *  during execution of this component.
+	 * 
+	 *  If not set, the following default case will be used. The default replacement pattern expects one 
+	 *  matching group. If you adapt this regex make sure to adapt the replacement pattern as well.
+	 *  <code>
+	 *      "(?<!\\bnew\\W)\\b(%s)(?=[^a-zA-Z\\d_$])(?!\\W+eINSTANCE\\b)"
+	 *  </code>
+	 *  It comprises of the following aspects:
+	 *  * <code>(%s)</code>: the original class name (inserted by String.format)
+	 *  * <code>\\b(%s)(?=[^a-zA-Z\\d_$])</code>: the original class name as separate word (preceeded 
+	 *    by a word boundary and not followed by an alphanumerical, underscore or an dollar sign (positive 
+	 *    lookahead). We can not use word boundary (\b) here as it does not prevent the latter two. 
+	 *  * <code>(?<!\\bnew\\W)</code>: not preceeded by "new " (negative lookbehind) to exclude explicit
+	 *    constructor calls.
+	 *  * <code>(?!\\W+eINSTANCE\\b)</code>: not followed by "eINSTANCE" to exclude static eINSTANCE fields
+	 *    in interfaces (negative lookahead).
+	 */
 	public void setSearchPattern(String searchPattern) {
 		this.searchPattern = searchPattern;
 	}

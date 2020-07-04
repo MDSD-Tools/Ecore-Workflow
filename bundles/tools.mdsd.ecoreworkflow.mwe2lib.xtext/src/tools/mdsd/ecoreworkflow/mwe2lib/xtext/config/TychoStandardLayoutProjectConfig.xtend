@@ -20,7 +20,6 @@ class TychoStandardLayoutProjectConfig extends StandardProjectConfig {
 			case genericIde: bundlesFolder
 			case eclipsePlugin: bundlesFolder
 			case eclipsePluginTest: testsFolder
-			case ideaPlugin: bundlesFolder
 			case web: bundlesFolder
 		}
 		rootPath + '/' + folderPrefix + '/' + project.name

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
-      id="tools.mdsd.ecoreworkflow.mwe2lib.feature"
-      label="MDSD.tools EcoreWorkflow MWE2 Library"
-      version="0.1.1.qualifier"
-      plugin="org.palladiosimulator.branding">
+      id="tools.mdsd.ecoreworkflow.mwe2lib.xtext.feature"
+      label="MDSD.tools EcoreWorkflow MWE2 Library for Xtext"
+      version="0.1.1.qualifier">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -18,7 +17,7 @@
    </license>
 
    <plugin
-         id="tools.mdsd.ecoreworkflow.mwe2lib"
+         id="tools.mdsd.ecoreworkflow.mwe2lib.xtext"
          download-size="0"
          install-size="0"
          version="0.0.0"

@@ -3,6 +3,9 @@
    <feature id="tools.mdsd.ecoreworkflow.mwe2lib.feature">
       <category name="ecoreworkflow"/>
    </feature>
+   <feature id="tools.mdsd.ecoreworkflow.mwe2lib.xtext.feature">
+      <category name="ecoreworkflow"/>
+   </feature>
    <feature id="tools.mdsd.ecoreworkflow.umlecoregenerator.feature">
       <category name="ecoreworkflow"/>
    </feature>

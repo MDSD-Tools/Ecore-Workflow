@@ -6,8 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Automatic-Module-Name: tools.mdsd.ecoreworkflow.umlgenerator
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.emf.mwe2.lib,
- org.eclipse.emf.mwe2.runtime;bundle-version="2.11.3",
- org.eclipse.emf.codegen.ecore;bundle-version="2.22.0",
+ org.eclipse.emf.mwe2.runtime,
+ org.eclipse.emf.codegen.ecore,
  org.eclipse.uml2.codegen.ecore
 Import-Package: com.google.common.base
 Export-Package: tools.mdsd.ecoreworkflow.umlecoregenerator

@@ -1,6 +1,7 @@
 package tools.mdsd.ecoreworkflow.mwe2lib.component;
 
 import java.io.IOException;
+import java.io.File;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -52,9 +53,8 @@ public class RegexComponent extends AbstractWorkflowComponent2 {
 	protected void invokeInternal(WorkflowContext arg0, ProgressMonitor arg1, Issues arg2) {
 		arg1.beginTask("Replacing patterns for files", replacements.size());
 		for (Replacement replacement : replacements) {
-			
 			try {
-				List<Path> filesToProcess = replacement.getFilenames().stream().map(v ->transformFileStringToPath(v)).filter(Objects::nonNull).map(Paths::get).collect(Collectors.toList());
+				List<Path> filesToProcess = replacement.getFilenames().stream().map(v -> new File(v).toURI()).map(Paths::get).collect(Collectors.toList());
 				if (replacement.getDirectory() != null && replacement.getWildcard() != null) {
 				    final PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + replacement.getWildcard());
 				    Files.walkFileTree(Paths.get(this.convertUri(URI.createURI(replacement.getDirectory()))), new SimpleFileVisitor<Path>() {
@@ -104,13 +104,5 @@ public class RegexComponent extends AbstractWorkflowComponent2 {
 		else {
 			return uriConverter.normalize(uri).toFileString();
 		}
-	}
-	private java.net.URI transformFileStringToPath(String uri) {
-			try {
-				return new java.net.URI(uri);
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-				return null;
-			}
 	}
 }

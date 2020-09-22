@@ -8,6 +8,8 @@ Bundle-RequiredExecutionEnvironment: JavaSE-11
 Require-Bundle: org.eclipse.emf.mwe2.lib,
  org.eclipse.emf.mwe2.runtime,
  org.eclipse.emf.codegen.ecore,
- org.eclipse.uml2.codegen.ecore
-Import-Package: com.google.common.base
+ org.eclipse.uml2.codegen.ecore,
+ org.eclipse.emf.mwe.utils
+Import-Package: com.google.common.base,
+ org.apache.log4j;version="1.2.15"
 Export-Package: tools.mdsd.ecoreworkflow.umlecoregenerator

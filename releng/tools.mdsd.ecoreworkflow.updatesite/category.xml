@@ -9,5 +9,14 @@
    <feature id="tools.mdsd.ecoreworkflow.umlecoregenerator.feature">
       <category name="ecoreworkflow"/>
    </feature>
-   <category-def name="ecoreworkflow" label="MDSD Tools Ecore Workflow"/>
+   <feature id="tools.mdsd.ecoreworkflow.mwe2lib.feature.source">
+      <category name="ecoreworkflow.source"/>
+   </feature>
+   <feature id="tools.mdsd.ecoreworkflow.mwe2lib.xtext.feature.source">
+      <category name="ecoreworkflow.source"/>
+   </feature>
+   <feature id="tools.mdsd.ecoreworkflow.umlecoregenerator.feature.source">
+      <category name="ecoreworkflow.source"/>
+   </feature>
+   <category-def name="ecoreworkflow.source" label="MDSD Tools Ecore Workflow - Developer Resources"/>
 </site>

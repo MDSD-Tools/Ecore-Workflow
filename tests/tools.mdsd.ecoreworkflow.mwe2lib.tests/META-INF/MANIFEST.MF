@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: MWE2 Lib Tests
+Bundle-SymbolicName: tools.mdsd.ecoreworkflow.mwe2lib.tests
+Bundle-Version: 0.1.1.qualifier
+Fragment-Host: tools.mdsd.ecoreworkflow.mwe2lib;bundle-version="0.1.1"
+Automatic-Module-Name: tools.mdsd.ecoreworkflow.mwe2lib.tests
+Bundle-RequiredExecutionEnvironment: JavaSE-11
+Require-Bundle: org.junit,
+ org.junit.jupiter.api,
+ tools.mdsd.library.standalone.initialization;bundle-version="0.1.0"
+Import-Package: org.eclipse.osgi.util;version="1.1.0"

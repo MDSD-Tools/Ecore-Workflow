@@ -6,14 +6,15 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
-import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.commons.logging.Log;
@@ -51,10 +52,20 @@ public class RegexComponent extends AbstractWorkflowComponent2 {
 		arg1.beginTask("Replacing patterns for files", replacements.size());
 		for (Replacement replacement : replacements) {
 			try {
-				List<Path> filesToProcess = replacement.getFilenames().stream().map(Paths::get).collect(Collectors.toList());
-				if (replacement.getDirectory() != null && replacement.getWildcard() != null) {
+				Optional<Path> directory = Optional.ofNullable(replacement.getDirectory())
+						.map(this::fromFilename);
+				
+				List<Path> filesToProcess = replacement.getFilenames().stream().map(this::fromFilename).map(path -> {
+					if ((!path.isAbsolute()) && directory.isPresent()) {
+						return directory.get().resolve(path);
+					} 
+					return path;
+				}).collect(Collectors.toList());
+				
+				if (replacement.getWildcard() != null && directory.isPresent()) {
 				    final PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + replacement.getWildcard());
-				    Files.walkFileTree(Paths.get(this.convertUri(URI.createURI(replacement.getDirectory()))), new SimpleFileVisitor<Path>() {
+				    
+				    Files.walkFileTree(directory.get(), new SimpleFileVisitor<Path>() {
 				        @Override
 				        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
 				            if (matcher.matches(file)) {
@@ -90,16 +101,38 @@ public class RegexComponent extends AbstractWorkflowComponent2 {
 		}
 	}
 	
+	protected Path fromFilename(String filename) {
+		Path result = null;
+		try {
+			// Try resolve the path string directly as path
+			result = Path.of(filename);
+		} catch (InvalidPathException e1) {
+			try {
+				// Otherwise, try resolving the backing folder pointed to by the URI directly
+				result = Path.of(convertUri(URI.createURI(filename)));
+			} catch (InvalidPathException e2) {
+				try {
+					// Otherwise, try resolving the backing folder pointed to by the URI through java.net.URI.
+					result = Path.of(java.net.URI.create(convertUri(URI.createURI(filename))));
+				} catch (InvalidPathException e3) {
+					LOG.error("Could not resolve filename: " + filename);
+					throw e3;
+				}
+			}
+		}
+		return result;
+	}
+	
 	protected String convertUri(URI uri) {
 		if (uri.isPlatform()) {
 			if (Platform.isRunning()) {
 				return ResourcesPlugin.getWorkspace().getRoot().getFile(new org.eclipse.core.runtime.Path(uri.toPlatformString(true))).getLocation().toString();
-			} else {
-				return EcorePlugin.resolvePlatformResourcePath(uri.toPlatformString(true)).toFileString();
+			} else { 
+				return EcorePlugin.resolvePlatformResourcePath(uri.toPlatformString(true)).toString();
 			}
 		}            	
 		else {
-			return uriConverter.normalize(uri).toFileString();
+			return uriConverter.normalize(uri).toString();
 		}
 	}
 

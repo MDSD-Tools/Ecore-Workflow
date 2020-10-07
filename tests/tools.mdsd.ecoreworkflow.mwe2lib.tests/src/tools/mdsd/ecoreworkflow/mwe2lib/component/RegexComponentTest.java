@@ -29,7 +29,7 @@ class RegexComponentTest {
 
     @BeforeAll
     static void setUp() throws StandaloneInitializationException, IOException {
-        TEMP_FOLDER = Files.createTempDirectory("test_");
+        TEMP_FOLDER = Files.createTempDirectory("test_").toAbsolutePath();
         TEMP_FILE = Files.createTempFile(TEMP_FOLDER, "some", "file");
 
         StandaloneInitializerBuilder.builder()
@@ -76,7 +76,6 @@ class RegexComponentTest {
         var resourceUri = "platform:/resource/" + PROJECT_NAME + "/" + TEMP_FILE.getFileName()
             .toString();
         converted = cut.fromFilename(resourceUri);
-        assertTrue(converted.isAbsolute());
         assertEquals(TEMP_FILE, converted);
 
         converted = cut.fromFilename(TEMP_FOLDER.toString());

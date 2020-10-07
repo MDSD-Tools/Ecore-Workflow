@@ -1,14 +1,15 @@
 package tools.mdsd.ecoreworkflow.mwe2lib.component;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
-import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
+import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
@@ -52,41 +53,7 @@ public class RegexComponent extends AbstractWorkflowComponent2 {
         arg1.beginTask("Replacing patterns for files", replacements.size());
         for (Replacement replacement : replacements) {
             try {
-                Optional<Path> directory = Optional.ofNullable(replacement.getDirectory())
-                    .map(this::fromFilename);
-
-                List<Path> filesToProcess = replacement.getFilenames()
-                    .stream()
-                    .map(this::fromFilename)
-                    .map(path -> {
-                        if ((!path.isAbsolute()) && directory.isPresent()) {
-                            return directory.get()
-                                .resolve(path);
-                        }
-                        return path;
-                    })
-                    .collect(Collectors.toList());
-
-                if (replacement.getWildcard() != null && directory.isPresent()) {
-                    final PathMatcher matcher = FileSystems.getDefault()
-                        .getPathMatcher("glob:" + replacement.getWildcard());
-
-                    Files.walkFileTree(directory.get(), new SimpleFileVisitor<Path>() {
-                        @Override
-                        public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                            if (matcher.matches(file)) {
-                                filesToProcess.add(file);
-                            }
-                            return FileVisitResult.CONTINUE;
-                        }
-
-                        @Override
-                        public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
-                            return FileVisitResult.CONTINUE;
-                        }
-                    });
-                }
-                replace(filesToProcess, replacement.getMappings());
+                replace(determineFilesToReplace(replacement), replacement.getMappings());
                 arg1.worked(1);
             } catch (IOException e) {
                 arg2.addError("Replacement failed.", e);
@@ -96,56 +63,123 @@ public class RegexComponent extends AbstractWorkflowComponent2 {
         arg1.done();
     }
 
-    private void replace(List<Path> paths, Collection<Mapping> replacements) throws IOException {
-        for (Path filePath : paths) {
-            String content = new String(Files.readAllBytes(filePath), charset);
+    private void replace(List<URI> uris, Collection<Mapping> replacements) throws IOException {
+        for (URI uri : uris) {
+            var content = readFile(uri);
             for (Mapping replacement : replacements) {
                 content = content.replaceAll(replacement.getFrom(), replacement.getTo());
             }
-            Files.write(filePath, content.getBytes(charset));
-            LOG.info("Regex Replacement for:" + filePath.toString());
+            writeFile(uri, content);
+            LOG.info("Regex Replacement for:" + uri.toString());
         }
     }
 
-    protected Path fromFilename(String filename) {
-        Path result = null;
-        try {
-            // Try resolve the path string directly as path
-            result = Path.of(filename);
-        } catch (InvalidPathException e1) {
-            try {
-                // Otherwise, try resolving the backing folder pointed to by the URI directly
-                result = Path.of(convertUri(URI.createURI(filename)));
-            } catch (InvalidPathException e2) {
-                try {
-                    // Otherwise, try resolving the backing folder pointed to by the URI through
-                    // java.net.URI.
-                    result = Path.of(java.net.URI.create(convertUri(URI.createURI(filename))));
-                } catch (InvalidPathException e3) {
-                    LOG.error("Could not resolve filename: " + filename);
-                    throw e3;
+    protected String readFile(URI fileUri) throws IOException {
+        try (var stream = uriConverter.createInputStream(fileUri)) {
+            return new String(stream.readAllBytes(), charset);
+        }
+    }
+
+    protected void writeFile(URI fileUri, String content) throws IOException {
+        try (var stream = uriConverter.createOutputStream(fileUri)) {
+            stream.write(content.getBytes(charset));
+        }
+    }
+
+    protected List<URI> determineFilesToReplace(Replacement replacement) throws IOException {
+        Optional<URI> directory = Optional.ofNullable(replacement.getDirectory())
+            .map(this::fromFilename);
+
+        List<URI> filesToProcess = replacement.getFilenames()
+            .stream()
+            .map(this::fromFilename)
+            .map(uri -> directory.map(this::ensureAbsoluteURI)
+                .map(uri::resolve)
+                .orElse(uri))
+            .collect(Collectors.toList());
+
+        if (replacement.getWildcard() != null && directory.isPresent()) {
+            final PathMatcher matcher = FileSystems.getDefault()
+                .getPathMatcher("glob:" + replacement.getWildcard());
+
+            var dirPath = getAbsolutePathOfDirectory(directory.get());
+
+            Files.walkFileTree(dirPath, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    var relativeMatch = dirPath.relativize(file);
+                    if (matcher.matches(relativeMatch)) {
+                        filesToProcess.add(URI.createURI(file.toUri()
+                            .toString()));
+                    }
+                    return FileVisitResult.CONTINUE;
                 }
+
+                @Override
+                public FileVisitResult visitFileFailed(Path file, IOException exc) throws IOException {
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        }
+        return filesToProcess;
+    }
+
+    protected URI fromFilename(String filename) {
+        var uri = parseURI(filename);
+        return uri.orElseGet(() -> URI.createURI(Path.of(filename)
+            .toUri()
+            .toString()));
+    }
+
+    protected Optional<URI> parseURI(String uri) {
+        try {
+            var jUri = new java.net.URI(uri);
+            return Optional.of(URI.createURI(jUri.toString()));
+        } catch (URISyntaxException e) {
+            return Optional.empty();
+        }
+
+    }
+
+    protected Path getAbsolutePathOfDirectory(URI uri) {
+        Path result;
+        if (uri.isPlatform()) {
+            var platformString = uri.toPlatformString(true);
+            if (Platform.isRunning()) {
+                var path = new org.eclipse.core.runtime.Path(platformString);
+                result = ResourcesPlugin.getWorkspace()
+                    .getRoot()
+                    .getFile(path)
+                    .getLocation()
+                    .toFile()
+                    .toPath();
+            } else {
+                var resolvedUri = EcorePlugin.resolvePlatformResourcePath(platformString);
+                result = getPathOfFileURI(resolvedUri);
             }
+        } else if (uri.isFile() || uri.isRelative()) {
+            result = getPathOfFileURI(uri);
+        } else {
+            throw new IllegalArgumentException(
+                    "Could not resolve the URI of the base directory to a file path: " + uri.toString());
         }
         return result;
     }
 
-    protected String convertUri(URI uri) {
-        if (uri.isPlatform()) {
-            if (Platform.isRunning()) {
-                return ResourcesPlugin.getWorkspace()
-                    .getRoot()
-                    .getFile(new org.eclipse.core.runtime.Path(uri.toPlatformString(true)))
-                    .getLocation()
-                    .toString();
-            } else {
-                return EcorePlugin.resolvePlatformResourcePath(uri.toPlatformString(true))
-                    .toString();
-            }
-        } else {
-            return uriConverter.normalize(uri)
-                .toString();
-        }
+    protected Path getPathOfFileURI(URI uri) {
+        var jUri = java.net.URI.create(ensureAbsoluteURI(uri).toString());
+        return Paths.get(jUri);
     }
 
+    protected URI ensureAbsoluteURI(URI uri) {
+        var jUri = java.net.URI.create(uri.toString());
+        if (!jUri.isAbsolute()) {
+            try {
+                jUri = new java.net.URI("file", jUri.getHost(), jUri.getPath(), jUri.getFragment());
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return URI.createURI(jUri.toString());
+    }
 }

@@ -1,13 +1,12 @@
 package tools.mdsd.ecoreworkflow.mwe2lib.component;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.UUID;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -31,6 +30,7 @@ class RegexComponentTest {
     static void setUp() throws StandaloneInitializationException, IOException {
         TEMP_FOLDER = Files.createTempDirectory("test_").toAbsolutePath();
         TEMP_FILE = Files.createTempFile(TEMP_FOLDER, "some", "file");
+        Files.writeString(TEMP_FILE, RegexComponentTest.class.toString());
 
         StandaloneInitializerBuilder.builder()
             .useEcoreClasspathDetection(true)
@@ -68,23 +68,42 @@ class RegexComponentTest {
     @Test
     void testFromFilename() throws Exception {
         var cut = new RegexComponent();
-
-        var converted = cut.fromFilename("test");
-        assertFalse(converted.isAbsolute());
-        assertEquals(Paths.get("test"), converted);
-
-        var resourceUri = "platform:/resource/" + PROJECT_NAME + "/" + TEMP_FILE.getFileName()
-            .toString();
-        converted = cut.fromFilename(resourceUri);
-        assertEquals(TEMP_FILE, converted);
-
-        converted = cut.fromFilename(TEMP_FOLDER.toString());
-        assertTrue(converted.isAbsolute());
-        assertEquals(TEMP_FOLDER, converted);
-
-        var uri = TEMP_FOLDER.toUri();
-        converted = cut.fromFilename(uri.toString());
-        assertEquals(Paths.get(uri), converted);
+        var compareUri = URI.createURI(TEMP_FILE.toUri().toString());
+               
+        var replacement = new Replacement();
+        replacement.setDirectory(TEMP_FOLDER.toString());
+        replacement.addFilename(TEMP_FILE.getFileName().toString());
+        var converted = cut.determineFilesToReplace(replacement);
+        assertNotNull(converted);
+        assertEquals(1, converted.size());
+        assertEquals(compareUri, converted.get(0));
+               
+        replacement = new Replacement();
+        replacement.addFilename(TEMP_FILE.toUri().toString());
+        converted = cut.determineFilesToReplace(replacement);
+        assertNotNull(converted);
+        assertEquals(1, converted.size());
+        assertEquals(compareUri, converted.get(0));
+        
+        replacement = new Replacement();
+        replacement.setDirectory(TEMP_FOLDER.toString());
+        replacement.setWildcard("some*file");
+        converted = cut.determineFilesToReplace(replacement);
+        assertNotNull(converted);
+        assertEquals(1, converted.size());
+        assertEquals(compareUri, converted.get(0));
+        
+        
+        replacement = new Replacement();
+        replacement.addFilename("platform:/resource/" + PROJECT_NAME + "/" + TEMP_FILE.getFileName()
+            .toString());
+        converted = cut.determineFilesToReplace(replacement);
+        assertNotNull(converted);
+        assertEquals(1, converted.size());
+        var phrase = UUID.randomUUID().toString();
+        cut.writeFile(compareUri, phrase);
+        var content = cut.readFile(converted.get(0));
+        assertEquals(phrase, content);
     }
 
 }

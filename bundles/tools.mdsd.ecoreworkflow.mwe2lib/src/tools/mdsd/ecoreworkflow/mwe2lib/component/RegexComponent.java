@@ -88,13 +88,14 @@ public class RegexComponent extends AbstractWorkflowComponent2 {
 
     protected List<URI> determineFilesToReplace(Replacement replacement) throws IOException {
         Optional<URI> directory = Optional.ofNullable(replacement.getDirectory())
-            .map(this::fromFilename);
+            .map(this::fromFilename)
+            .map(this::ensureAbsoluteURI)
+            .map(this::ensureEmptyLastSegment);
 
         List<URI> filesToProcess = replacement.getFilenames()
             .stream()
             .map(this::fromFilename)
-            .map(uri -> directory.map(this::ensureAbsoluteURI)
-                .map(uri::resolve)
+            .map(uri -> directory.map(uri::resolve)
                 .orElse(uri))
             .collect(Collectors.toList());
 
@@ -175,11 +176,23 @@ public class RegexComponent extends AbstractWorkflowComponent2 {
         var jUri = java.net.URI.create(uri.toString());
         if (!jUri.isAbsolute()) {
             try {
-                jUri = new java.net.URI("file", jUri.getHost(), jUri.getPath(), jUri.getFragment());
+                jUri = Paths.get(new java.net.URI("file", jUri.getHost(), jUri.getPath(), jUri.getFragment()))
+                    .toAbsolutePath()
+                    .toUri();
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
             }
         }
         return URI.createURI(jUri.toString());
+    }
+    
+    protected URI ensureEmptyLastSegment(URI uri) {
+        var lastSegment = uri.segment(uri.segmentCount() - 1);
+        // Ensure an empty last segment, which is removed when resolving URIs against the directory.
+        // This is equivalent to a trailing slash.
+        if (lastSegment != null && !lastSegment.isBlank()) {
+            uri = uri.appendSegment("");
+        }
+        return uri;
     }
 }

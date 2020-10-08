@@ -77,7 +77,7 @@ class RegexComponentTest {
         assertNotNull(converted);
         assertEquals(1, converted.size());
         assertEquals(compareUri, converted.get(0));
-               
+        
         replacement = new Replacement();
         replacement.addFilename(TEMP_FILE.toUri().toString());
         converted = cut.determineFilesToReplace(replacement);

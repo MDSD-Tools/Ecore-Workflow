@@ -89,7 +89,7 @@ public class RegexComponent extends AbstractWorkflowComponent2 {
     protected List<URI> determineFilesToReplace(Replacement replacement) throws IOException {
         Optional<URI> directory = Optional.ofNullable(replacement.getDirectory())
             .map(this::fromFilename)
-            .map(this::ensureAbsoluteURI)
+            .map(this::ensureURIHasScheme)
             .map(this::ensureEmptyLastSegment);
 
         List<URI> filesToProcess = replacement.getFilenames()
@@ -97,21 +97,26 @@ public class RegexComponent extends AbstractWorkflowComponent2 {
             .map(this::fromFilename)
             .map(uri -> directory.map(uri::resolve)
                 .orElse(uri))
+            .map(this::ensureURIHasScheme)
             .collect(Collectors.toList());
 
-        if (replacement.getWildcard() != null && directory.isPresent()) {
+        if (replacement.getWildcard() != null) {
+            if (directory.isEmpty()) throw new IllegalArgumentException("Cannot scan for files based on a wildcard without a base directory.");
+            
             final PathMatcher matcher = FileSystems.getDefault()
                 .getPathMatcher("glob:" + replacement.getWildcard());
 
-            var dirPath = getAbsolutePathOfDirectory(directory.get());
+            // While for operating with files we compose URIs and rely on EMF to resolve URI correctly,
+            // in order to scan the files contained within a directory we have to resolve the path of
+            // the directory on the file system. Unfortunately, there is no method provided by EMF.
+            var dirPath = getPathOfDirectoryOnFilesystem(directory.get());
 
             Files.walkFileTree(dirPath, new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     var relativeMatch = dirPath.relativize(file);
                     if (matcher.matches(relativeMatch)) {
-                        filesToProcess.add(URI.createURI(file.toUri()
-                            .toString()));
+                        filesToProcess.add(ensureURIHasScheme(URI.createURI(file.toUri().toString())));
                     }
                     return FileVisitResult.CONTINUE;
                 }
@@ -142,13 +147,12 @@ public class RegexComponent extends AbstractWorkflowComponent2 {
 
     }
 
-    protected Path getAbsolutePathOfDirectory(URI uri) {
-        Path result;
+    protected Path getPathOfDirectoryOnFilesystem(URI uri) {
         if (uri.isPlatform()) {
             var platformString = uri.toPlatformString(true);
             if (Platform.isRunning()) {
                 var path = new org.eclipse.core.runtime.Path(platformString);
-                result = ResourcesPlugin.getWorkspace()
+                return ResourcesPlugin.getWorkspace()
                     .getRoot()
                     .getFile(path)
                     .getLocation()
@@ -156,23 +160,22 @@ public class RegexComponent extends AbstractWorkflowComponent2 {
                     .toPath();
             } else {
                 var resolvedUri = EcorePlugin.resolvePlatformResourcePath(platformString);
-                result = getPathOfFileURI(resolvedUri);
+                return getPathOfFileURI(resolvedUri);
             }
         } else if (uri.isFile() || uri.isRelative()) {
-            result = getPathOfFileURI(uri);
+            return getPathOfFileURI(uri);
         } else {
             throw new IllegalArgumentException(
                     "Could not resolve the URI of the base directory to a file path: " + uri.toString());
         }
-        return result;
     }
 
     protected Path getPathOfFileURI(URI uri) {
-        var jUri = java.net.URI.create(ensureAbsoluteURI(uri).toString());
+        var jUri = java.net.URI.create(ensureURIHasScheme(uri).toString());
         return Paths.get(jUri);
     }
 
-    protected URI ensureAbsoluteURI(URI uri) {
+    protected URI ensureURIHasScheme(URI uri) {
         var jUri = java.net.URI.create(uri.toString());
         if (!jUri.isAbsolute()) {
             try {

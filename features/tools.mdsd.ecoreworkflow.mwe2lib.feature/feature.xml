@@ -2,20 +2,13 @@
 <feature
       id="tools.mdsd.ecoreworkflow.mwe2lib.feature"
       label="MDSD.tools EcoreWorkflow MWE2 Library"
-      version="0.1.1.qualifier"
-      plugin="org.palladiosimulator.branding">
+      version="0.2.0.qualifier"
+      license-feature="tools.mdsd.license.epl2"
+      license-feature-version="1.0.0">
 
-   <description url="http://www.example.com/description">
-      [Enter Feature Description here.]
+   <description url="https://github.com/MDSD-Tools/Ecore-Workflow">
+      MWE2 Component library to support the MDSD.tools Model Driven Workflow for Ecore-based projects.
    </description>
-
-   <copyright url="http://www.example.com/copyright">
-      [Enter Copyright Description here.]
-   </copyright>
-
-   <license url="http://www.example.com/license">
-      [Enter License Description here.]
-   </license>
 
    <plugin
          id="tools.mdsd.ecoreworkflow.mwe2lib"

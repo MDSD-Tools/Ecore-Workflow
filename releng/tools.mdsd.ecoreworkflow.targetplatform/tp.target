@@ -9,5 +9,9 @@
         <unit id="tools.mdsd.library.standalone.initialization.core.feature.feature.group" version="0.1.0.202004172117" />
         <repository location="https://updatesite.mdsd.tools/library-standaloneinitialization/releases/latest/" />
     </location>
+    <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="false" type="InstallableUnit">
+        <repository location="https://updatesite.mdsd.tools/build-licensefeature/releases/latest/"/>
+        <unit id="tools.mdsd.license.epl2.feature.group" version="1.0.0"/>
+    </location>
 </locations>
 </target>

@@ -18,6 +18,25 @@ public class EclipseRCPSupportingStandaloneSetup extends StandaloneSetup {
 	@Override
 	protected void registerMapping(String name, URI uri) {
 		// Do not modify the Ecore Platform mapping if the platform is running
+		System.out.println("dummyOutput");
+		System.out.println("dummyOutput");
+		System.out.println("dummyOutput");
+		System.out.println("dummyOutput");
+		System.out.println("dummyOutput");
+		System.out.println("dummyOutput");
+		System.out.println("dummyOutput");
+		System.out.println("dummyOutput");
+		System.out.println("dummyOutput");
+		System.out.println("dummyOutput");
+		System.out.println("dummyOutput");
+		System.out.println("dummyOutput");
+		System.out.println("dummyOutput");
+		System.out.println("dummyOutput");
+		System.out.println("dummyOutput");
+		System.out.println("dummyOutput");
+		System.out.println("dummyOutput");
+		System.out.println("dummyOutput");
+		System.out.println("dummyOutput");
 		if (!Platform.isRunning()) super.registerMapping(name, uri);
 	}
 

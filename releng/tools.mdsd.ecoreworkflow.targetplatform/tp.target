@@ -2,16 +2,16 @@
 <?pde version="3.8"?><target name="tools.mdsd.ecoreworkflow Target Platform" sequenceNumber="1">
 <locations>
     <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-        <unit id="org.eclipse.xtext.sdk.feature.group" version="2.22.0.v20200602-1533" />
-        <repository location="http://download.eclipse.org/releases/2020-06/202006171000" />
+        <unit id="org.eclipse.xtext.sdk.feature.group" version="2.24.0.v20201130-1016" />
+        <repository location="http://download.eclipse.org/releases/2020-12/202012161000" />
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-        <unit id="tools.mdsd.library.standalone.initialization.core.feature.feature.group" version="0.1.0.202004172117" />
+        <unit id="tools.mdsd.library.standalone.initialization.core.feature.feature.group" version="0.0.0" />
         <repository location="https://updatesite.mdsd.tools/library-standaloneinitialization/releases/latest/" />
     </location>
     <location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="false" type="InstallableUnit">
         <repository location="https://updatesite.mdsd.tools/build-licensefeature/releases/latest/"/>
-        <unit id="tools.mdsd.license.epl2.feature.group" version="1.0.0"/>
+        <unit id="tools.mdsd.license.epl2.feature.group" version="0.0.0"/>
     </location>
 </locations>
 </target>

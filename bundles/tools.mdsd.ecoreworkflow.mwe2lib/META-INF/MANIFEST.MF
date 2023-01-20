@@ -4,7 +4,7 @@ Bundle-Name: MDSD Tools Ecore Workflow Mwe2 Library
 Bundle-SymbolicName: tools.mdsd.ecoreworkflow.mwe2lib
 Bundle-Version: 0.2.0.qualifier
 Automatic-Module-Name: tools.mdsd.ecoreworkflow.mwe2lib
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Export-Package: tools.mdsd.ecoreworkflow.mwe2lib.bean,
  tools.mdsd.ecoreworkflow.mwe2lib.component
 Require-Bundle: org.eclipse.emf.mwe.utils,

@@ -4,7 +4,7 @@ Bundle-Name: MDSD.tools Ecore Workflow Mwe2 Library for Xtext
 Bundle-SymbolicName: tools.mdsd.ecoreworkflow.mwe2lib.xtext
 Bundle-Version: 0.1.1.qualifier
 Automatic-Module-Name: tools.mdsd.ecoreworkflow.mwe2lib.xtext
-Bundle-RequiredExecutionEnvironment: JavaSE-11
+Bundle-RequiredExecutionEnvironment: JavaSE-17
 Require-Bundle: org.eclipse.emf.mwe.utils,
  org.eclipse.emf.ecore,
  org.eclipse.emf.mwe.core,

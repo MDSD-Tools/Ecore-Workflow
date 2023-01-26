@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Ecore MWE2 Workflow Eclipse Builder
 Bundle-SymbolicName: tools.mdsd.ecoreworkflow.builder;singleton:=true
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 0.3.1.qualifier
 Bundle-Activator: tools.mdsd.ecoreworkflow.builder.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources,

@@ -4,10 +4,9 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   Ecore-Workflow:
-    uses: PalladioSimulator/Palladio-Build-ActionsPipeline/.github/workflows/build.yml@v3.2
+    uses: PalladioSimulator/Palladio-Build-ActionsPipeline/.github/workflows/build.yml@v3.3
     with:
       use-display-output: true
-      no-caching: true
       java-version: 17
       runner-label: ubuntu-latest
       deploy-updatesite: 'releng/tools.mdsd.ecoreworkflow.updatesite/target/repository'

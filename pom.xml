@@ -6,11 +6,11 @@
 	<parent>
 		<groupId>tools.mdsd</groupId>
 		<artifactId>eclipse-parent-updatesite</artifactId>
-		<version>0.8.7</version>
+		<version>0.8.8</version>
 	</parent>
 	<groupId>tools.mdsd.ecoreworkflow</groupId>
 	<artifactId>parent</artifactId>	
-	<version>0.3.1-SNAPSHOT</version>
+	<version>0.3.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	
 	<properties>

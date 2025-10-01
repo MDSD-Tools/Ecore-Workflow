@@ -2,7 +2,7 @@
 <feature
       id="tools.mdsd.ecoreworkflow.builder.feature"
       label="MDSD Tools Ecore Workflow Builder Feature"
-      version="0.3.2.qualifier">
+      version="1.0.0">
 
    <description url="http://www.example.com/description">
       [Enter Feature Description here.]
@@ -20,14 +20,14 @@
          id="tools.mdsd.ecoreworkflow.builder"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.0.0"
          unpack="false"/>
 
    <plugin
          id="tools.mdsd.ecoreworkflow.mwe2lib"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.0.0"
          unpack="false"/>
 
 </feature>

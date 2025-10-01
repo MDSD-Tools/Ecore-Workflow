@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MWE2 Lib Tests
 Bundle-SymbolicName: tools.mdsd.ecoreworkflow.mwe2lib.tests
-Bundle-Version: 1.0.0r
+Bundle-Version: 1.0.0
 Fragment-Host: tools.mdsd.ecoreworkflow.mwe2lib
 Automatic-Module-Name: tools.mdsd.ecoreworkflow.mwe2lib.tests
 Bundle-RequiredExecutionEnvironment: JavaSE-17

@@ -2,7 +2,7 @@
 <feature
       id="tools.mdsd.ecoreworkflow.mwe2lib.feature"
       label="MDSD.tools EcoreWorkflow MWE2 Library"
-      version="0.3.2.qualifier"
+      version="1.0.0"
       license-feature="tools.mdsd.license.epl2"
       license-feature-version="1.0.0">
 
@@ -14,7 +14,7 @@
          id="tools.mdsd.ecoreworkflow.mwe2lib"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.0.0"
          unpack="false"/>
 
 </feature>

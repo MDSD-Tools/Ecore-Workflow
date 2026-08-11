@@ -5,7 +5,7 @@ Bundle-SymbolicName: tools.mdsd.ecoreworkflow.mwe2lib.tests
 Bundle-Version: 1.0.0
 Fragment-Host: tools.mdsd.ecoreworkflow.mwe2lib
 Automatic-Module-Name: tools.mdsd.ecoreworkflow.mwe2lib.tests
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.junit,
  junit-jupiter-api,
  tools.mdsd.library.standalone.initialization

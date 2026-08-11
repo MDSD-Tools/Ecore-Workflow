@@ -2,9 +2,9 @@
 <feature
       id="tools.mdsd.ecoreworkflow.umlecoregenerator.feature"
       label="UML Ecore Generator Feature"
-      version="0.3.2.qualifier"
+      version="1.1.0"
       license-feature="tools.mdsd.license.epl2"
-      license-feature-version="1.0.0">
+      license-feature-version="1.1.0">
 
    <description url="https://github.com/MDSD-Tools/Ecore-Workflow">
       MWE2 Component library to support the MDSD.tools Model Driven Workflow for UML-based projects

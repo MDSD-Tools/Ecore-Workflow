@@ -4,13 +4,13 @@ on: [push, pull_request, workflow_dispatch]
 
 jobs:
   Ecore-Workflow:
-    uses: PalladioSimulator/Palladio-Build-ActionsPipeline/.github/workflows/build.yml@master
+    uses: PalladioSimulator/Palladio-Build-ActionsPipeline/.github/workflows/build.yml@FixTagCreationLogic
     with:
       use-display-output: true
-      java-version: 17
+      java-version: 21
       runner-label: ubuntu-latest
       deploy-updatesite: 'releng/tools.mdsd.ecoreworkflow.updatesite/target/repository'
-      release-version: '1.0.0'
+      release-version: '1.1.0'
     secrets:
       SERVER_SSH_KEY: ${{ secrets.DEPLOYMENT_SERVER_SSH_KEY }}
       REMOTE_HOST: ${{ secrets.DEPLOYMENT_REMOTE_HOST }}

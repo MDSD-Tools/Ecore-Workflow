@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>tools.mdsd.ecoreworkflow</groupId>
 	<artifactId>parent</artifactId>
-	<version>1.1.0</version>
+	<version>1.2.0</version>
 	<packaging>pom</packaging>
 
 	<name>${project.artifactId}</name>
@@ -14,7 +14,9 @@
 
 	<properties>
 		<tycho.version>4.0.13</tycho.version>
-		<xtend.version>2.39.0</xtend.version>
+		<!-- Keep in lockstep with the Xtext version the target platform provides:
+		     two Xtext generations in one build break the generator's injection. -->
+		<xtend.version>2.41.0</xtend.version>
 		<java.version>21</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>

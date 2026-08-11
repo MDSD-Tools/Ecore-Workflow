@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: MDSD.tools Ecore Workflow Mwe2 Library for Xtext
 Bundle-SymbolicName: tools.mdsd.ecoreworkflow.mwe2lib.xtext
-Bundle-Version: 1.1.0
+Bundle-Version: 1.2.0
 Automatic-Module-Name: tools.mdsd.ecoreworkflow.mwe2lib.xtext
 Bundle-RequiredExecutionEnvironment: JavaSE-21
 Require-Bundle: org.eclipse.emf.mwe.utils,
